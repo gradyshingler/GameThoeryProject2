@@ -7,13 +7,35 @@ import java.util.Scanner;
 import cmsc474.structure.Board;
 
 public class reversi {
+	
+	final static boolean LOCAL_TEST = true;
 
 	public static void main(String[] args) {
-		Scanner sc;
-		final boolean LOCAL_TEST = true;
-		int[][] boardNums = new int[8][];
+		int[][] rawBoard = new int[8][];
 		Board myBoard = null;
 		
+		rawBoard = parseBoard();
+		
+		myBoard = new Board(rawBoard);
+		myBoard.print();
+	}
+	
+	private static void printMatrix(int[][] matrix){
+		int rows = matrix.length;
+		System.out.println("Rows:"+rows);
+		int cols = matrix[0].length;
+		System.out.println("Cols:"+cols);
+		
+		for(int i = 0; i< rows; i++){
+			for(int j = 0; j<matrix[i].length; j++){
+				System.out.print(matrix[i][j]+" ");
+			}
+			System.out.println(" ");
+		}
+	}
+	
+	private static int[][] parseBoard(){
+		Scanner sc;
 		if(LOCAL_TEST){
 			try {
 				File file = new File("src/cmsc474/testFiles/testFile.readBoard");
@@ -26,6 +48,7 @@ public class reversi {
 		} else {
 			sc = new Scanner(System.in);
 		}
+		int[][] boardNums = new int[8][];
 		
 		boardNums[0] = new int[8];
 		for(int i=0;i<8;i++){
@@ -60,22 +83,9 @@ public class reversi {
 			boardNums[7][i] = sc.nextInt();
 		}
 		
-		myBoard = new Board(boardNums);
-		myBoard.print();
-	}
-	
-	private static void printMatrix(int[][] matrix){
-		int rows = matrix.length;
-		System.out.println("Rows:"+rows);
-		int cols = matrix[0].length;
-		System.out.println("Cols:"+cols);
+		sc.close();
 		
-		for(int i = 0; i< rows; i++){
-			for(int j = 0; j<matrix[i].length; j++){
-				System.out.print(matrix[i][j]+" ");
-			}
-			System.out.println(" ");
-		}
+		return boardNums;
 	}
 
 }
