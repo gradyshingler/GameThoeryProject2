@@ -9,6 +9,9 @@ import cmsc474.structure.Board;
 public class reversi {
 	
 	final static boolean LOCAL_TEST = true;
+	final static File testFile1 = new File("src/cmsc474/testFiles/testFile.readBoard");
+	final static File fileToTest = testFile1;
+	
 
 	public static void main(String[] args) {
 		int[][] rawBoard = new int[8][];
@@ -20,6 +23,9 @@ public class reversi {
 		myBoard.print();
 	}
 	
+	/*
+	 * Prints a 2d int array matrix for testing purposes
+	 */
 	private static void printMatrix(int[][] matrix){
 		int rows = matrix.length;
 		System.out.println("Rows:"+rows);
@@ -34,11 +40,14 @@ public class reversi {
 		}
 	}
 	
+	/*
+	 * Creates a 2D int array from the Standard input or from the specified test File
+	 */
 	private static int[][] parseBoard(){
 		Scanner sc;
 		if(LOCAL_TEST){
 			try {
-				File file = new File("src/cmsc474/testFiles/testFile.readBoard");
+				File file = fileToTest;
 				sc = new Scanner(file);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block

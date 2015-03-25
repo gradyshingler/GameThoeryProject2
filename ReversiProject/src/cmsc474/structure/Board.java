@@ -5,6 +5,9 @@ import cmsc474.boardEnum.Cell;
 public class Board {
 	Cell[][] board = new Cell[10][16];
 	
+	/*
+	 * Creates a new board from an int array
+	 */
 	public Board(int[][] array){
 		int rowLength = 8;
 		int wallLength = 4;
@@ -37,6 +40,9 @@ public class Board {
 		}
 	}
 	
+	/*
+	 * Prints the board for testing purposes
+	 */
 	public void print(){		
 		for(int i = 0; i<board.length; i++){
 			for(int j = 0; j<board[i].length; j++){
