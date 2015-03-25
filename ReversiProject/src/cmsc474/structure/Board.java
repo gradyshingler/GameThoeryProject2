@@ -50,6 +50,9 @@ public class Board {
 	public void makeMove(){
 		//(TODO)
 		computePossibleMoves();
+		for(Move curr: possibleMoves){
+			System.out.println(curr.toString());
+		}
 	}
 	
 	/*
@@ -57,9 +60,13 @@ public class Board {
 	 */
 	public void print(){	
 		System.out.println("Board: disk_Count: "+disk_count);
+		System.out.println("     | a b c d e f g h i j k l m n o p");
 		for(int i = 0; i<board.length; i++){
 			System.out.print("Row "+i+"| ");
 			for(int j = 0; j<board[i].length; j++){
+				if(possibleMoves.contains(new Move(i,j))){
+					System.out.print("X ");
+				} else
 				System.out.print(board[i][j].getVal()+" ");
 			}
 			System.out.println(" ");
@@ -71,8 +78,7 @@ public class Board {
 	}
 	
 	private void computePossibleMoves(){
-		//Move[] toReturn = new Move[88-disk_count];
-		for(int i = 1;i<9;i++){
+		for(int i=1;i<9;i++){
 			for(int j=1;j<15;j++){
 				if(canMoveHere(i,j)) possibleMoves.add(new Move(i,j));
 			}
@@ -91,23 +97,26 @@ public class Board {
 	private boolean DirectionCheck(int x, int y, int dir){// 0 = east, 1= south east 2=south etc...
 		int dx = 0;
 		int dy = 0;
-		if(dir == 0){ dx=1; }
-		else if(dir == 1) { dx=1;dy=1; }
-		else if(dir == 2) { dx=0;dy=1; }
-		//etc... etc... ran out of Time tonight will finish tomorrow
+		if(dir == 0){ dx=1; }				//East
+		else if(dir == 1) { dx=1;dy=1; }	//South-East
+		else if(dir == 2) { dx=0;dy=1; }	//South
+		else if(dir == 3) { dx=-1;dy=1; }	//South-West
+		else if(dir == 4) { dx=-1;dy=0; }	//West
+		else if(dir == 5) { dx=-1;dy=-1; }	//North-West
+		else if(dir == 6) { dx=0;dy=-1; }	//North
+		else if(dir == 7) { dx=1;dy=-1; }	//North-East
 		
 		
-		if(getCell(x+dx,y+dy)!=Cell.OPPONENT) return false;
+		if(getCell(x+dy,y+dx)!=Cell.OPPONENT) return false;
 		else {
-			int counter=2;
 			for(int i=2;i<15;i++){
-				Cell tempCell = getCell(x+(dx*i),y+(dx*i));
+				Cell tempCell = getCell(x+(dy*i),y+(dx*i));
 				if(tempCell == Cell.OPPONENT)
 					continue;
 				else if(tempCell == Cell.MINE)
 					return true;
 				else
-					break;
+					return false;
 			}
 		}
 		return false;

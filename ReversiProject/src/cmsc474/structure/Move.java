@@ -24,4 +24,18 @@ public class Move {
 	public void printMove(){
 		System.out.println(getConvertedRow()+" "+getConvertedCol());
 	}
+	
+	/*public boolean equals(Object o){
+		if(o instanceof Move){
+			Move tempMove = (Move)o;
+			return (xPos == tempMove.xPos && yPos == tempMove.yPos);
+		} else {
+			return false;
+		}
+		
+	}*/
+	
+	public String toString(){
+		return xPos+":"+yPos;
+	}
 }
