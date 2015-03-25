@@ -40,11 +40,16 @@ public class Board {
 		}
 	}
 	
+	public void makeMove(){
+		//(TODO)
+	}
+	
 	/*
 	 * Prints the board for testing purposes
 	 */
-	public void print(){		
+	public void print(){	
 		for(int i = 0; i<board.length; i++){
+			System.out.print("Row "+i+"| ");
 			for(int j = 0; j<board[i].length; j++){
 				System.out.print(board[i][j].getVal()+" ");
 			}

@@ -21,6 +21,7 @@ public class reversi {
 		
 		myBoard = new Board(rawBoard);
 		myBoard.print();
+		myBoard.makeMove();
 	}
 	
 	/*
