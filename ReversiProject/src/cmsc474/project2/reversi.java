@@ -20,8 +20,8 @@ public class reversi {
 		rawBoard = parseBoard();
 		
 		myBoard = new Board(rawBoard);
-		myBoard.print();
 		myBoard.makeMove();
+		// un-comment to see board print out myBoard.print();
 	}
 	
 	/*

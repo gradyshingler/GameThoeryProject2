@@ -50,9 +50,7 @@ public class Board {
 	public void makeMove(){
 		//(TODO)
 		computePossibleMoves();
-		for(Move curr: possibleMoves){
-			System.out.println(curr.toString());
-		}
+		possibleMoves.get(0).printMove();
 	}
 	
 	/*
@@ -120,5 +118,11 @@ public class Board {
 			}
 		}
 		return false;
+	}
+	
+	public void printPossibleMoves(){
+		for(Move curr: possibleMoves){
+			System.out.println(curr.toString());
+		}
 	}
 }
