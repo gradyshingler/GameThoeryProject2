@@ -6,7 +6,7 @@ import java.util.List;
 import cmsc474.boardEnum.Cell;
 
 public class Board {
-	Cell[][] board = new Cell[10][16];
+	static Cell[][] board = new Cell[10][16];
 	int disk_count = 0;
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 

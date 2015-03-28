@@ -14,11 +14,9 @@ public class Move {
 		N, NE, E, SE, S, SW, W, NW
 	};
 	public TreeMap<Direction, Integer> Flips;
-	public Move(int p, int x, int y, int ps, int cs ) {
-		xPos = x;
-		yPos = y;
-		PrevScore = ps;
-		CurrScore = cs;
+	public Move(int p, int x1, int y1) {
+		xPos = x1;
+		yPos = y1;
 		player = p;
 		Flips = new TreeMap<Direction, Integer>();
 	}
@@ -28,6 +26,64 @@ public class Move {
 	}
 	public void addBoardChange(int x, int y, int sc1, int sc2){
 		BoardChanges.add("x,y,sc1,sc2");
+	}
+	public void Execute(){
+		for (Direction dir : Flips.keySet()){
+			if(dir.equals(Direction.N))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					//Board.board[x][y-1] need to flip in opposite direction of x and y destination coordinates
+				}
+			}else if(dir.equals(Direction.NE))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else if(dir.equals(Direction.E))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else if(dir.equals(Direction.SE))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else if(dir.equals(Direction.S))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else if(dir.equals(Direction.SW))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else  if(dir.equals(Direction.W))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else if(dir.equals(Direction.NW))
+			{
+				for(int i = 0 ; i< Flips.get(dir); i++)
+				{
+					
+				}
+			}else{
+				System.out.printf("Direction Error in move.execute");
+			}
+		}
+	}
+	public void Undo(){
+		
 	}
 	public int getConvertedRow() {
 		return xPos;
