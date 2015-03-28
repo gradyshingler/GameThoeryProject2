@@ -82,7 +82,7 @@ public class Board {
 						possibleMoves.add(newMove);
 					}
 					//Add directional stuff to move
-					newMove.addFlips(Move.Direction.NE, i-1);
+					newMove.addFlips(Move.Direction.getDir((dir+6)%8), i-1);
 					return;
 				} else {
 					return; //No possible move this way so don't add anything
