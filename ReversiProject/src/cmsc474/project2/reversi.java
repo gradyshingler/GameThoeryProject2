@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import cmsc474.structure.Board;
 
+
 public class reversi {
 
 	final static boolean LOCAL_TEST = true;
