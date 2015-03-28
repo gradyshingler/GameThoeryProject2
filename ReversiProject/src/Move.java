@@ -10,7 +10,7 @@ public class Move {
 	int CurrScore;
 	int player;// 1 is player1, 2 is player2
 	List<String> BoardChanges;
-	public enum Direction{
+	public static enum Direction{
 		N, NE, E, SE, S, SW, W, NW
 	};
 	public TreeMap<Direction, Integer> Flips;
@@ -27,54 +27,54 @@ public class Move {
 	public void addBoardChange(int r, int c, int sc1, int sc2){
 		BoardChanges.add(r + "," + c + "," + sc1 + "," + sc2);
 	}
-	public void Execute(){
+	private void flip(){
 		for (Direction dir : Flips.keySet()){
 			if(dir.equals(Direction.N))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row-i][col].flip();
 					//Board.board[row][col-i] need to flip in opposite direction of x and y destination coordinates
 				}
 			}else if(dir.equals(Direction.NE))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row-i][col-i].flip();
 				}
 			}else if(dir.equals(Direction.E))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row][col+i].flip();
 				}
 			}else if(dir.equals(Direction.SE))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row+i][col-i].flip();
 				}
 			}else if(dir.equals(Direction.S))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row+i][col].flip();
 				}
 			}else if(dir.equals(Direction.SW))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row+i][col+i].flip();
 				}
 			}else  if(dir.equals(Direction.W))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row][col+i].flip();
 				}
 			}else if(dir.equals(Direction.NW))
 			{
-				for(int i = 0 ; i< Flips.get(dir); i++)
+				for(int i = 1 ; i< Flips.get(dir); i++)
 				{
 					Board.board[row-i][col+i].flip();
 				}
@@ -83,8 +83,16 @@ public class Move {
 			}
 		}
 	}
+	public void Execute(){
+		if(player == 1){
+			Board.board[row][col] = new Disk(col, row, Cell.MINE);
+		}else{
+			Board.board[row][col] = new Disk(col, row, Cell.OPPONENT);
+		}
+		flip();
+	}
 	public void Undo(){
-		
+		Board.board[row][col] = null;
 	}
 	public int getConvertedRow() {
 		return col;
