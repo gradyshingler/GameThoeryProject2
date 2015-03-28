@@ -68,8 +68,16 @@ public class Board {
 			for (int j = 0; j < board[i].length; j++) {
 				if (possibleMoves.contains(new Move(i, j))) {
 					System.out.print("X ");
-				} else
-					System.out.print(board[i][j].getVal() + " ");
+				} else{
+					String val = board[i][j].getVal();
+					if(val.equals("0")){
+						System.out.print("+ ");//2 spaces
+					}else if(val.equals("3")){
+						System.out.print("  ");//+ and space
+					}else{
+						System.out.print(board[i][j].getVal() + " ");
+					}
+				}
 			}
 			System.out.println(" ");
 		}
