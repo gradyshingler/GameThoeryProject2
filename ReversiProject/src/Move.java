@@ -123,6 +123,7 @@ public class Move {
 	}
 	public void Undo(){
 		Board.board[row][col] = null;
+		flip();
 	}
 	public int getConvertedRow() {
 		return col;
