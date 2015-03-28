@@ -1,6 +1,7 @@
 // A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse()m
 
-package cmsc474.structure;
+
+
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,5 @@
-package cmsc474.structure;
+
+
 
 
 //GRady's note::: THIS SHOULD BE NEW

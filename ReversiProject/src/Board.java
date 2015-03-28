@@ -1,7 +1,8 @@
-package cmsc474.structure;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 public class Board {
