@@ -21,8 +21,8 @@ public class reversi {
 		rawBoard = parseBoard();
 
 		myBoard = new Board(rawBoard);
-		myBoard.makeMove();
 		if(LOCAL_TEST) myBoard.print();
+		if(LOCAL_TEST) System.out.println("Converted move index: "); myBoard.makeMove();
 	}
 
 	/*

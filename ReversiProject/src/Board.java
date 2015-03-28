@@ -15,79 +15,14 @@ public class Board {
 	 * Creates a new board from an int array
 	 */
 	public Board(int[][] array) {
-		int rowLength = 8;
-		int wallLength = 4;
-		boolean top = true;
-		for (int i = 0; i < 10; i++) {
-			if (i == 0 || i == 9) {
-				for (int j = 0; j < 16; j++) {
-					board[i][j] = new Disk(i, j, Cell.WALL);
-
-				}
-			} else {
-				for (int j = 0; j < wallLength; j++) {
-					board[i][j] = new Disk(i, j, Cell.WALL);
-				}
-				for (int j = wallLength; j < rowLength + wallLength; j++) {
-					Cell tempCell = Cell.getCell(array[i - 1][j - wallLength]);
-					Disk diskToAdd = new Disk(i, j, tempCell); 
-					board[i][j] = diskToAdd;
-					if (tempCell == Cell.MINE) {
-						blackDisks.add(diskToAdd);
-					} else if(tempCell == Cell.OPPONENT){
-						whiteDisks.add(diskToAdd);
-					}
-				}
-				for (int j = (wallLength) + rowLength; j < 16; j++) {
-					board[i][j] = new Disk(i, j, Cell.WALL);
-				}
-				if (top) {
-					rowLength += 2;
-					if (wallLength == 1)
-						top = false;
-					wallLength -= 1;
-				}
-				if (!top) { // not top
-					rowLength -= 2;
-					wallLength += 1;
-				}
-			}
-		}
+		parseToBoardObject(array);
+		computePossibleMoves();
 	}
 
 	public void makeMove() {
-		// (TODO)
-		computePossibleMoves();
+		// (TODO) - I believe here is where we will be doing alot of the strategic planning
+		// Right now it just outputs whatever the first move in the possibleMoves array
 		possibleMoves.get(0).printMove();
-		//printPossibleMoves();
-	}
-
-	/*
-	 * Prints the board for testing purposes
-	 */
-	public void print() {
-		System.out.println("Board: disk_Count: " + getDiskCount());
-		System.out.println("Black Disks: "+blackDisks.toString());
-		System.out.println("White Disks: "+whiteDisks.toString());
-		System.out.println("     | a b c d e f g h i j k l m n o p");
-		for (int i = 0; i < board.length; i++) {
-			System.out.print("Row " + i + "| ");
-			for (int j = 0; j < board[i].length; j++) {
-				if (possibleMoves.contains(new Move(1, i, j))) {
-					System.out.print("X ");
-				} else{
-					String val = board[i][j].getCell().getVal();
-					if(val.equals("0")){
-						System.out.print("+ ");//2 spaces
-					}else if(val.equals("3")){
-						System.out.print("  ");//+ and space
-					}else{
-						System.out.print(board[i][j].getCell().getVal() + " ");
-					}
-				}
-			}
-			System.out.println(" ");
-		}
 	}
 	
 	public int getDiskCount(){
@@ -119,9 +54,7 @@ public class Board {
 		return false;
 	}
 
-	private boolean DirectionCheck(int x, int y, int dir) {// 0 = east, 1= south
-															// east 2=south
-															// etc...
+	private boolean DirectionCheck(int x, int y, int dir) {// 0 = east, 1= south, east 2=south, etc...
 		int dx = 0;
 		int dy = 0;
 		if (dir == 0) {
@@ -171,10 +104,85 @@ public class Board {
 		}
 		return false;
 	}
-
+	
+	//Obsolete function... I kept around for reference to special for loop syntax
 	public void printPossibleMoves() {
 		for (Move curr : possibleMoves) {
-			System.out.println(curr.toString());
+			System.out.print(curr.toString());
+		}
+	}
+	
+	public ArrayList<Move> getPossibleMoves() {
+		return possibleMoves;
+	}
+	
+	/*
+	 * Prints the board for testing purposes
+	 */
+	public void print() {
+		System.out.println("Board: disk_Count: " + getDiskCount());
+		System.out.println("Black Disks: "+blackDisks.toString());
+		System.out.println("White Disks: "+whiteDisks.toString());
+		System.out.println("Possible Moves: "+ possibleMoves.toString());
+		System.out.println("     | a b c d e f g h i j k l m n o p");
+		for (int i = 0; i < board.length; i++) {
+			System.out.print("Row " + i + "| ");
+			for (int j = 0; j < board[i].length; j++) {
+				if (possibleMoves.contains(new Move(1, i, j))) {
+					System.out.print("X ");
+				} else{
+					String val = board[i][j].getCell().getVal();
+					if(val.equals("0")){
+						System.out.print("- ");//2 spaces
+					}else if(val.equals("3")){
+						System.out.print("  ");//+ and space
+					}else{
+						System.out.print(board[i][j].getCell().getVal() + " ");
+					}
+				}
+			}
+			System.out.println(" ");
+		}
+	}
+	
+	public void parseToBoardObject(int[][] array){
+		int rowLength = 8;
+		int wallLength = 4;
+		boolean top = true;
+		for (int i = 0; i < 10; i++) {
+			if (i == 0 || i == 9) {
+				for (int j = 0; j < 16; j++) {
+					board[i][j] = new Disk(i, j, Cell.WALL);
+
+				}
+			} else {
+				for (int j = 0; j < wallLength; j++) {
+					board[i][j] = new Disk(i, j, Cell.WALL);
+				}
+				for (int j = wallLength; j < rowLength + wallLength; j++) {
+					Cell tempCell = Cell.getCell(array[i - 1][j - wallLength]);
+					Disk diskToAdd = new Disk(i, j, tempCell); 
+					board[i][j] = diskToAdd;
+					if (tempCell == Cell.MINE) {
+						blackDisks.add(diskToAdd);
+					} else if(tempCell == Cell.OPPONENT){
+						whiteDisks.add(diskToAdd);
+					}
+				}
+				for (int j = (wallLength) + rowLength; j < 16; j++) {
+					board[i][j] = new Disk(i, j, Cell.WALL);
+				}
+				if (top) {
+					rowLength += 2;
+					if (wallLength == 1)
+						top = false;
+					wallLength -= 1;
+				}
+				if (!top) { // not top
+					rowLength -= 2;
+					wallLength += 1;
+				}
+			}
 		}
 	}
 }
