@@ -97,6 +97,7 @@ public class Move {
 			return yPos - ((xPos - 5));
 	}
 
+	//This should be used to print the one and final move to submit
 	public void printMove() {
 		System.out.println(getConvertedRow() + " " + getConvertedCol());
 	}

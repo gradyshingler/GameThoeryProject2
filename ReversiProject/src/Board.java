@@ -7,8 +7,9 @@ import java.util.List;
 
 public class Board {
 	static Disk[][] board = new Disk[10][16];
-	int disk_count = 0;
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
+	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
+	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
 
 	/*
 	 * Creates a new board from an int array
@@ -29,9 +30,13 @@ public class Board {
 				}
 				for (int j = wallLength; j < rowLength + wallLength; j++) {
 					Cell tempCell = Cell.getCell(array[i - 1][j - wallLength]);
-					board[i][j] = new Disk(i, j, tempCell);
-					if (tempCell != Cell.EMPTY)
-						disk_count += 1;
+					Disk diskToAdd = new Disk(i, j, tempCell); 
+					board[i][j] = diskToAdd;
+					if (tempCell == Cell.MINE) {
+						blackDisks.add(diskToAdd);
+					} else if(tempCell == Cell.OPPONENT){
+						whiteDisks.add(diskToAdd);
+					}
 				}
 				for (int j = (wallLength) + rowLength; j < 16; j++) {
 					board[i][j] = new Disk(i, j, Cell.WALL);
@@ -61,7 +66,9 @@ public class Board {
 	 * Prints the board for testing purposes
 	 */
 	public void print() {
-		System.out.println("Board: disk_Count: " + disk_count);
+		System.out.println("Board: disk_Count: " + getDiskCount());
+		System.out.println("Black Disks: "+blackDisks.toString());
+		System.out.println("White Disks: "+whiteDisks.toString());
 		System.out.println("     | a b c d e f g h i j k l m n o p");
 		for (int i = 0; i < board.length; i++) {
 			System.out.print("Row " + i + "| ");
@@ -81,6 +88,10 @@ public class Board {
 			}
 			System.out.println(" ");
 		}
+	}
+	
+	public int getDiskCount(){
+		return blackDisks.size()+whiteDisks.size();
 	}
 
 	public Disk getDisk(int x, int y) {

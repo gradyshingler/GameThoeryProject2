@@ -1,8 +1,4 @@
-
-
-
-
-//GRady's note::: THIS SHOULD BE NEW
+//default package
 
 public class Disk {
 	int xPos, yPos;
@@ -39,7 +35,11 @@ public class Disk {
 	public void setStable(boolean stable) {
 		Stable = stable;
 	}
+	public String toString(){
+		return "("+xPos+","+yPos+"):"+cell.getVal();
+	}
 	public void flip(){
-		//(TODO) - switch black to white and white to black
+		if(cell == Cell.MINE) cell = Cell.OPPONENT;
+		else if(cell == Cell.OPPONENT) cell = Cell.MINE;
 	}
 }
