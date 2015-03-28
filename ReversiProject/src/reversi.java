@@ -1,4 +1,4 @@
-// A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse(112324599)
+// A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse Averbukh (112324599)
 
 
 
