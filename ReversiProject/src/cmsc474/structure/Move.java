@@ -4,7 +4,7 @@ public class Move {
 	int xPos;
 	int yPos;
 	int score;
-
+//Andrew's better note
 	public Move(int x, int y) {
 		xPos = x;
 		yPos = y;
