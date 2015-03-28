@@ -2,7 +2,6 @@ package cmsc474.structure;
 
 import cmsc474.boardEnum.Cell;
 
-
 public class Disk {
 	int xPos, yPos;
 	Cell cell;
