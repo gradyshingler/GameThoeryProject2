@@ -1,4 +1,4 @@
-// A_Team: Grady Shingler (112700508), Andrew Browning (), Jesse?
+// A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse()
 
 package cmsc474.project2;
 
@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import cmsc474.structure.Board;
-
 
 public class reversi {
 
