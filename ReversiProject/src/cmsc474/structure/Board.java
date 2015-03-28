@@ -9,109 +9,142 @@ public class Board {
 	Cell[][] board = new Cell[10][16];
 	int disk_count = 0;
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
-	
+
 	/*
 	 * Creates a new board from an int array
 	 */
-	public Board(int[][] array){
+	public Board(int[][] array) {
 		int rowLength = 8;
 		int wallLength = 4;
 		boolean top = true;
-		for(int i=0;i<10;i++){
-			if(i==0||i==9) {
-				for(int j=0;j<16;j++){
+		for (int i = 0; i < 10; i++) {
+			if (i == 0 || i == 9) {
+				for (int j = 0; j < 16; j++) {
 					board[i][j] = Cell.WALL;
-					
+
 				}
 			} else {
-				for(int j=0;j<wallLength;j++){
+				for (int j = 0; j < wallLength; j++) {
 					board[i][j] = Cell.WALL;
 				}
-				for(int j = wallLength;j<rowLength+wallLength;j++){
-					Cell tempCell = Cell.getCell(array[i-1][j-wallLength]);
+				for (int j = wallLength; j < rowLength + wallLength; j++) {
+					Cell tempCell = Cell.getCell(array[i - 1][j - wallLength]);
 					board[i][j] = tempCell;
-					if(tempCell != Cell.EMPTY) disk_count+=1;
+					if (tempCell != Cell.EMPTY)
+						disk_count += 1;
 				}
-				for(int j=(wallLength)+rowLength;j<16;j++){
+				for (int j = (wallLength) + rowLength; j < 16; j++) {
 					board[i][j] = Cell.WALL;
 				}
-				if(top){
-					rowLength+=2;
-					if(wallLength == 1) top = false;
-					wallLength-=1;
-				} if(!top) { //not top
-					rowLength-=2;
+				if (top) {
+					rowLength += 2;
+					if (wallLength == 1)
+						top = false;
+					wallLength -= 1;
+				}
+				if (!top) { // not top
+					rowLength -= 2;
 					wallLength += 1;
 				}
 			}
 		}
 	}
-	
-	public void makeMove(){
-		//(TODO)
+
+	public void makeMove() {
+		// (TODO)
 		computePossibleMoves();
 		possibleMoves.get(0).printMove();
+		//printPossibleMoves();
 	}
-	
+
 	/*
 	 * Prints the board for testing purposes
 	 */
-	public void print(){	
-		System.out.println("Board: disk_Count: "+disk_count);
+	public void print() {
+		System.out.println("Board: disk_Count: " + disk_count);
 		System.out.println("     | a b c d e f g h i j k l m n o p");
-		for(int i = 0; i<board.length; i++){
-			System.out.print("Row "+i+"| ");
-			for(int j = 0; j<board[i].length; j++){
-				if(possibleMoves.contains(new Move(i,j))){
+		for (int i = 0; i < board.length; i++) {
+			System.out.print("Row " + i + "| ");
+			for (int j = 0; j < board[i].length; j++) {
+				if (possibleMoves.contains(new Move(i, j))) {
 					System.out.print("X ");
 				} else
-				System.out.print(board[i][j].getVal()+" ");
+					System.out.print(board[i][j].getVal() + " ");
 			}
 			System.out.println(" ");
 		}
 	}
-	
-	public Cell getCell(int x, int y){
+
+	public Cell getCell(int x, int y) {
 		return board[x][y];
 	}
-	
-	private void computePossibleMoves(){
-		for(int i=1;i<9;i++){
-			for(int j=1;j<15;j++){
-				if(canMoveHere(i,j)) possibleMoves.add(new Move(i,j));
+
+	private void computePossibleMoves() {
+		for (int i = 1; i < 9; i++) {
+			for (int j = 1; j < 15; j++) {
+				if (canMoveHere(i, j))
+					possibleMoves.add(new Move(i, j));
 			}
 		}
-		//return possibleMoves;
+		// return possibleMoves;
 	}
-	
-	private boolean canMoveHere(int x, int y){
-		if(getCell(x,y) != Cell.EMPTY) return false;
-		for(int i=0;i<8;i++){//i stands for direction: 0 = east, 1= south east 2=south etc...
-			if(DirectionCheck(x,y,i))return true;
+
+	private boolean canMoveHere(int x, int y) {
+		if (getCell(x, y) != Cell.EMPTY)
+			return false;
+		for (int i = 0; i < 8; i++) {// i stands for direction: 0 = east, 1=
+										// south east 2=south etc...
+			if (DirectionCheck(x, y, i))
+				return true;
 		}
 		return false;
 	}
-	
-	private boolean DirectionCheck(int x, int y, int dir){// 0 = east, 1= south east 2=south etc...
+
+	private boolean DirectionCheck(int x, int y, int dir) {// 0 = east, 1= south
+															// east 2=south
+															// etc...
 		int dx = 0;
 		int dy = 0;
-		if(dir == 0){ dx=1; }				//East
-		else if(dir == 1) { dx=1;dy=1; }	//South-East
-		else if(dir == 2) { dx=0;dy=1; }	//South
-		else if(dir == 3) { dx=-1;dy=1; }	//South-West
-		else if(dir == 4) { dx=-1;dy=0; }	//West
-		else if(dir == 5) { dx=-1;dy=-1; }	//North-West
-		else if(dir == 6) { dx=0;dy=-1; }	//North
-		else if(dir == 7) { dx=1;dy=-1; }	//North-East
-		
-		
-		if(getCell(x+dy,y+dx)!=Cell.OPPONENT) return false;
+		if (dir == 0) {
+			dx = 1;
+		} // East
+		else if (dir == 1) {
+			dx = 1;
+			dy = 1;
+		} // South-East
+		else if (dir == 2) {
+			dx = 0;
+			dy = 1;
+		} // South
+		else if (dir == 3) {
+			dx = -1;
+			dy = 1;
+		} // South-West
+		else if (dir == 4) {
+			dx = -1;
+			dy = 0;
+		} // West
+		else if (dir == 5) {
+			dx = -1;
+			dy = -1;
+		} // North-West
+		else if (dir == 6) {
+			dx = 0;
+			dy = -1;
+		} // North
+		else if (dir == 7) {
+			dx = 1;
+			dy = -1;
+		} // North-East
+
+		if (getCell(x + dy, y + dx) != Cell.OPPONENT)
+			return false;
 		else {
-			for(int i=2;i<15;i++){
-				Cell tempCell = getCell(x+(dy*i),y+(dx*i));
-				if(tempCell == Cell.OPPONENT)
+			for (int i = 2; i < 15; i++) {
+				Cell tempCell = getCell(x + (dy * i), y + (dx * i));
+				if (tempCell == Cell.OPPONENT)
 					continue;
-				else if(tempCell == Cell.MINE)
+				else if (tempCell == Cell.MINE)
 					return true;
 				else
 					return false;
@@ -119,9 +152,9 @@ public class Board {
 		}
 		return false;
 	}
-	
-	public void printPossibleMoves(){
-		for(Move curr: possibleMoves){
+
+	public void printPossibleMoves() {
+		for (Move curr : possibleMoves) {
 			System.out.println(curr.toString());
 		}
 	}

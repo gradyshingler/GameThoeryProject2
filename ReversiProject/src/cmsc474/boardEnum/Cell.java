@@ -1,18 +1,15 @@
 package cmsc474.boardEnum;
 
 public enum Cell {
-	EMPTY(0),
-	MINE(1),
-	OPPONENT(2),
-	WALL(3);
-	
+	EMPTY(0), MINE(1), OPPONENT(2), WALL(3);
+
 	public int cellType;
-	
-	private Cell(int n){
+
+	private Cell(int n) {
 		cellType = n;
 	}
-	
-	public static Cell getCell(int i){
+
+	public static Cell getCell(int i) {
 		switch (i) {
 		case 0:
 			return Cell.EMPTY;
@@ -24,12 +21,12 @@ public enum Cell {
 			return Cell.WALL;
 		}
 	}
-	
-	public int getInt(){
+
+	public int getInt() {
 		return cellType;
 	}
-	
-	public String getVal(){
+
+	public String getVal() {
 		return String.valueOf(cellType);
 	}
 }

@@ -1,5 +1,8 @@
 package cmsc474.structure;
 
+import cmsc474.boardEnum.Cell;
+
+
 public class Disk {
 	int xPos, yPos;
 	Cell cell;
@@ -30,11 +33,6 @@ public class Disk {
 		Stable = stable;
 	}
 	public void flip(){
-		if(cell == 1){
-			cell == 2;
-		}
-		else{
-			cell == 1;
-		}
+		//(TODO) - switch black to white and white to black
 	}
 }
