@@ -1,16 +1,34 @@
 package cmsc474.structure;
 
+import java.util.List;
+import java.util.TreeMap;
+
 public class Move {
 	int xPos;
 	int yPos;
-	int score;
-//Andrew's better note
-	public Move(int x, int y) {
+	int PrevScore;
+	int CurrScore;
+	int player;// 1 is player1, 2 is player2
+	List<String> BoardChanges;
+	public enum Direction{
+		N, NE, E, SE, S, SW, W, NW
+	};
+	public TreeMap<Direction, Integer> Flips;
+	public Move(int p, int x, int y, int ps, int cs ) {
 		xPos = x;
 		yPos = y;
-		score = 0;
+		PrevScore = ps;
+		CurrScore = cs;
+		player = p;
+		Flips = new TreeMap<Direction, Integer>();
 	}
-
+	
+	public void addFlips(Direction dir, int num){
+		Flips.put(dir, num);
+	}
+	public void addBoardChange(int x, int y, int sc1, int sc2){
+		BoardChanges.add("x,y,sc1,sc2");
+	}
 	public int getConvertedRow() {
 		return xPos;
 
