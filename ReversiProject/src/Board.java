@@ -1,5 +1,3 @@
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +32,66 @@ public class Board {
 	}
 
 	private void computePossibleMoves() {
+		for(Disk currDisk: blackDisks){
+			updatePossibleMoves(currDisk);
+		}
 		for (int i = 1; i < 9; i++) {
 			for (int j = 1; j < 15; j++) {
 				if (canMoveHere(i, j))
 					possibleMoves.add(new Move(1, i, j));
 			}
 		}
-		// return possibleMoves;
+	}
+	
+	private void updatePossibleMoves(Disk disk){
+		for(int i=0; i<8;i++){
+			addMoveFromDirection(disk, i);
+		}
 	}
 
+	private void addMoveFromDirection(Disk disk, int dir){
+		int x = disk.getxPos();
+		int y = disk.getyPos();
+		
+		int dx = 0;
+		int dy = 0;
+		if (dir == 0) { dx = 1;	} // East
+		else if (dir == 1) {dx = 1;	dy = 1;	} // South-East
+		else if (dir == 2) {dx = 0;	dy = 1;	} // South
+		else if (dir == 3) {dx = -1; dy = 1; } // South-West
+		else if (dir == 4) {dx = -1; dy = 0; } // West
+		else if (dir == 5) {dx = -1; dy = -1; } // North-West
+		else if (dir == 6) {dx = 0;	dy = -1; } // North
+		else if (dir == 7) {dx = 1;	dy = -1; } // North-East
+
+		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)
+			return; //No possible move this way so don't add anything
+		else {
+			for (int i = 2; i < 15; i++) {
+				Cell tempCell = getDisk(x + (dy * i), y + (dx * i)).getCell();
+				if (tempCell == Cell.OPPONENT) {
+					continue;
+				} else if (tempCell == Cell.MINE) {
+					//Moving this way is possible so add move to possible move list or update if its already there
+					Move newMove = new Move(1, x + (dy * i), y + (dx * i));
+					if(possibleMoves.contains(newMove)){
+						//get Move and add direction and int to it
+						newMove = possibleMoves.get(possibleMoves.indexOf(newMove));
+					} else {
+						//insert Move to possible Moves
+						possibleMoves.add(newMove);
+					}
+					//Add directional stuff to move
+					newMove.addFlips(Move.Direction.NE, i-1);
+					return;
+				} else {
+					return; //No possible move this way so don't add anything
+				}
+			}
+		}
+		return; //No possible move this way so don't add anything
+	}
+	
 	private boolean canMoveHere(int x, int y) {
 		if (getDisk(x, y).getCell() != Cell.EMPTY)
 			return false;
