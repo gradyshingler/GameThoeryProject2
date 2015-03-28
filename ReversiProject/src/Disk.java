@@ -42,7 +42,7 @@ public class Disk {
 		if(cell == Cell.MINE) cell = Cell.OPPONENT;
 		else if(cell == Cell.OPPONENT) cell = Cell.MINE;
 	}
-	public void equals(Disk o){
+	public boolean equals(Disk o){
 		if(this.getxPos() == o.getxPos() && this.getyPos() == o.getyPos() &&
 				this.getCell() == o.getCell()){
 			return true;
