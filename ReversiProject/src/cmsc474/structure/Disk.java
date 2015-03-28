@@ -1,6 +1,5 @@
 package cmsc474.structure;
 
-import cmsc474.boardEnum.Cell;
 
 //GRady's note::: THIS SHOULD BE NEW
 
@@ -8,6 +7,12 @@ public class Disk {
 	int xPos, yPos;
 	Cell cell;
 	boolean Stable;
+	
+	public Disk(int x, int y, Cell type){
+		xPos = x;
+		yPos = y;
+		cell = type;
+	}
 	
 	public int getxPos() {
 		return xPos;

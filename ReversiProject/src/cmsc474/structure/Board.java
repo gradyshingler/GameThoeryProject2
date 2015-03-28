@@ -3,10 +3,9 @@ package cmsc474.structure;
 import java.util.ArrayList;
 import java.util.List;
 
-import cmsc474.boardEnum.Cell;
 
 public class Board {
-	static Cell[][] board = new Cell[10][16];
+	static Disk[][] board = new Disk[10][16];
 	int disk_count = 0;
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 
@@ -20,21 +19,21 @@ public class Board {
 		for (int i = 0; i < 10; i++) {
 			if (i == 0 || i == 9) {
 				for (int j = 0; j < 16; j++) {
-					board[i][j] = Cell.WALL;
+					board[i][j] = new Disk(i, j, Cell.WALL);
 
 				}
 			} else {
 				for (int j = 0; j < wallLength; j++) {
-					board[i][j] = Cell.WALL;
+					board[i][j] = new Disk(i, j, Cell.WALL);
 				}
 				for (int j = wallLength; j < rowLength + wallLength; j++) {
 					Cell tempCell = Cell.getCell(array[i - 1][j - wallLength]);
-					board[i][j] = tempCell;
+					board[i][j] = new Disk(i, j, tempCell);
 					if (tempCell != Cell.EMPTY)
 						disk_count += 1;
 				}
 				for (int j = (wallLength) + rowLength; j < 16; j++) {
-					board[i][j] = Cell.WALL;
+					board[i][j] = new Disk(i, j, Cell.WALL);
 				}
 				if (top) {
 					rowLength += 2;
@@ -66,16 +65,16 @@ public class Board {
 		for (int i = 0; i < board.length; i++) {
 			System.out.print("Row " + i + "| ");
 			for (int j = 0; j < board[i].length; j++) {
-				if (possibleMoves.contains(new Move(i, j))) {
+				if (possibleMoves.contains(new Move(1, i, j))) {
 					System.out.print("X ");
 				} else{
-					String val = board[i][j].getVal();
+					String val = board[i][j].getCell().getVal();
 					if(val.equals("0")){
 						System.out.print("+ ");//2 spaces
 					}else if(val.equals("3")){
 						System.out.print("  ");//+ and space
 					}else{
-						System.out.print(board[i][j].getVal() + " ");
+						System.out.print(board[i][j].getCell().getVal() + " ");
 					}
 				}
 			}
@@ -83,7 +82,7 @@ public class Board {
 		}
 	}
 
-	public Cell getCell(int x, int y) {
+	public Disk getDisk(int x, int y) {
 		return board[x][y];
 	}
 
@@ -91,14 +90,14 @@ public class Board {
 		for (int i = 1; i < 9; i++) {
 			for (int j = 1; j < 15; j++) {
 				if (canMoveHere(i, j))
-					possibleMoves.add(new Move(i, j));
+					possibleMoves.add(new Move(1, i, j));
 			}
 		}
 		// return possibleMoves;
 	}
 
 	private boolean canMoveHere(int x, int y) {
-		if (getCell(x, y) != Cell.EMPTY)
+		if (getDisk(x, y).getCell() != Cell.EMPTY)
 			return false;
 		for (int i = 0; i < 8; i++) {// i stands for direction: 0 = east, 1=
 										// south east 2=south etc...
@@ -145,11 +144,11 @@ public class Board {
 			dy = -1;
 		} // North-East
 
-		if (getCell(x + dy, y + dx) != Cell.OPPONENT)
+		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)
 			return false;
 		else {
 			for (int i = 2; i < 15; i++) {
-				Cell tempCell = getCell(x + (dy * i), y + (dx * i));
+				Cell tempCell = getDisk(x + (dy * i), y + (dx * i)).getCell();
 				if (tempCell == Cell.OPPONENT)
 					continue;
 				else if (tempCell == Cell.MINE)

@@ -1,4 +1,4 @@
-package cmsc474.boardEnum;
+package cmsc474.structure;
 
 public enum Cell {
 	EMPTY(0), MINE(1), OPPONENT(2), WALL(3);

@@ -1,18 +1,17 @@
 // A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse()m
 
-package cmsc474.project2;
+package cmsc474.structure;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import cmsc474.structure.Board;
 
 public class reversi {
 
-	final static boolean LOCAL_TEST = true;
-	final static File testFile1 = new File("src/cmsc474/testFiles/testFile.readBoard");
-	final static File fileToTest = testFile1;
+	final static boolean LOCAL_TEST = false;
+	//final static File testFile1 = new File("src/cmsc474/testFiles/testFile.readBoard");
+	//final static File fileToTest = testFile1;
 
 	public static void main(String[] args) {
 		int[][] rawBoard = new int[8][];
@@ -22,7 +21,7 @@ public class reversi {
 
 		myBoard = new Board(rawBoard);
 		myBoard.makeMove();
-		myBoard.print();
+		//myBoard.print();
 	}
 
 	/*
@@ -49,14 +48,14 @@ public class reversi {
 	private static int[][] parseBoard() {
 		Scanner sc;
 		if (LOCAL_TEST) {
-			try {
+			/*try {
 				File file = fileToTest;
 				sc = new Scanner(file);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				sc = null;
 				e.printStackTrace();
-			}
+			}*/
 		} else {
 			sc = new Scanner(System.in);
 		}
