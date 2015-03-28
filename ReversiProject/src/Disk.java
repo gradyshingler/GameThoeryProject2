@@ -39,8 +39,16 @@ public class Disk {
 		return "("+xPos+","+yPos+"):"+cell.getVal();
 	}
 	public void flip(){
-		if(cell == Cell.MINE) cell = Cell.OPPONENT;
-		else if(cell == Cell.OPPONENT) cell = Cell.MINE;
+		if(cell == Cell.MINE) {
+			cell = Cell.OPPONENT;
+			Board.blackDisks.remove(this);
+			Board.whiteDisks.add(this);
+		}
+		else if(cell == Cell.OPPONENT){
+			cell = Cell.MINE;
+			Board.whiteDisks.remove(this);
+			Board.blackDisks.add(this);
+		}
 	}
 	public boolean equals(Disk o){
 		if(this.getxPos() == o.getxPos() && this.getyPos() == o.getyPos() &&

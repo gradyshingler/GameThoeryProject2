@@ -6,8 +6,8 @@ import java.util.List;
 public class Board {
 	static Disk[][] board = new Disk[10][16];
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
-	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
-	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
+	static ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
+	static ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
 
 	/*
 	 * Creates a new board from an int array
