@@ -132,7 +132,7 @@ public class Move {
 		if(player == 1){
 			Board.blackDisks.remove(oldDisk);
 		}else{
-			Board.blackDisks.remove(oldDisk);
+			Board.whiteDisks.remove(oldDisk);
 		}
 		flip();
 	}
