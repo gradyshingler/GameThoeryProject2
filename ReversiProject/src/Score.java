@@ -1,5 +1,5 @@
 
-
+/*
 public class Score {
 	int[][] board = new int[10][16];
 	int rowLength = 8;
@@ -62,4 +62,4 @@ public class Score {
 			}
 		}
 	}
-}
+}*/

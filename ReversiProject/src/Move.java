@@ -125,15 +125,15 @@ public class Move {
 		Board.board[row][col] = null;
 	}
 	public int getConvertedRow() {
-		return col;
+		return row;
 
 	}
 
 	public int getConvertedCol() {
-		if (col <= 4)
-			return row + (col - 4);
+		if (row <= 4)
+			return col + (row - 4);
 		else
-			return row - ((col - 5));
+			return col - ((row - 5));
 	}
 
 	//This should be used to print the one and final move to submit
@@ -148,10 +148,9 @@ public class Move {
 		} else {
 			return false;
 		}
-
 	}
 
 	public String toString() {
-		return col + ":" + row;
+		return row + ":" + col;
 	}
 }
