@@ -116,14 +116,24 @@ public class Move {
 	}
 	public void Execute(){
 		if(player == 1){
-			Board.board[row][col] = new Disk(col, row, Cell.MINE);
+			Disk newDisk = new Disk(col, row, Cell.MINE);
+			Board.board[row][col] = newDisk;
+			Board.blackDisks.add(newDisk);
 		}else{
-			Board.board[row][col] = new Disk(col, row, Cell.OPPONENT);
+			Disk newDisk = new Disk(col, row, Cell.OPPONENT);
+			Board.board[row][col] = newDisk;
+			Board.whiteDisks.add(newDisk);
 		}
 		flip();
 	}
 	public void Undo(){
+		Disk oldDisk = Board.board[row][col];
 		Board.board[row][col] = null;
+		if(player == 1){
+			Board.blackDisks.remove(oldDisk);
+		}else{
+			Board.blackDisks.remove(oldDisk);
+		}
 		flip();
 	}
 	public int getConvertedRow() {
