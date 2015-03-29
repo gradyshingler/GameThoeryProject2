@@ -93,75 +93,6 @@ public class Board {
 		return; //No possible move this way so don't add anything
 	}
 	
-	private boolean canMoveHere(int x, int y) {
-		if (getDisk(x, y).getCell() != Cell.EMPTY)
-			return false;
-		for (int i = 0; i < 8; i++) {// i stands for direction: 0 = east, 1=
-										// south east 2=south etc...
-			if (DirectionCheck(x, y, i))
-				return true;
-		}
-		return false;
-	}
-
-	private boolean DirectionCheck(int x, int y, int dir) {// 0 = east, 1= south, east 2=south, etc...
-		int dx = 0;
-		int dy = 0;
-		if (dir == 0) {
-			dx = 1;
-		} // East
-		else if (dir == 1) {
-			dx = 1;
-			dy = 1;
-		} // South-East
-		else if (dir == 2) {
-			dx = 0;
-			dy = 1;
-		} // South
-		else if (dir == 3) {
-			dx = -1;
-			dy = 1;
-		} // South-West
-		else if (dir == 4) {
-			dx = -1;
-			dy = 0;
-		} // West
-		else if (dir == 5) {
-			dx = -1;
-			dy = -1;
-		} // North-West
-		else if (dir == 6) {
-			dx = 0;
-			dy = -1;
-		} // North
-		else if (dir == 7) {
-			dx = 1;
-			dy = -1;
-		} // North-East
-
-		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)
-			return false;
-		else {
-			for (int i = 2; i < 15; i++) {
-				Cell tempCell = getDisk(x + (dy * i), y + (dx * i)).getCell();
-				if (tempCell == Cell.OPPONENT)
-					continue;
-				else if (tempCell == Cell.MINE)
-					return true;
-				else
-					return false;
-			}
-		}
-		return false;
-	}
-	
-	//Obsolete function... I kept around for reference to special for loop syntax
-	public void printPossibleMoves() {
-		for (Move curr : possibleMoves) {
-			System.out.print(curr.toString());
-		}
-	}
-	
 	public ArrayList<Move> getPossibleMoves() {
 		return possibleMoves;
 	}
@@ -174,7 +105,7 @@ public class Board {
 		System.out.println("Black Disks: "+blackDisks.toString());
 		System.out.println("White Disks: "+whiteDisks.toString());
 		System.out.println("Possible Moves: "+ possibleMoves.toString());
-		System.out.println("     | a b c d e f g h i j k l m n o p");
+		System.out.println("     | 0 1 2 3 4 5 6 7 8 9 A B C D E F");
 		for (int i = 0; i < board.length; i++) {
 			System.out.print("Row " + i + "| ");
 			for (int j = 0; j < board[i].length; j++) {
