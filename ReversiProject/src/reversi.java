@@ -20,6 +20,7 @@ public class reversi {
 
 		rawBoard = parseBoard();
 
+		Score rawScoreChart = new Score();
 		myBoard = new Board(rawBoard);
 		if(LOCAL_TEST) myBoard.print();
 		if(LOCAL_TEST) System.out.println("Converted move index: "); myBoard.makeMove();
@@ -28,7 +29,7 @@ public class reversi {
 	/*
 	 * Prints a 2d int array matrix for testing purposes
 	 */
-	private static void printMatrix(int[][] matrix) {
+	static void printMatrix(int[][] matrix) {
 		int rows = matrix.length;
 		System.out.println("Rows:" + rows);
 		int cols = matrix[0].length;
@@ -36,7 +37,7 @@ public class reversi {
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < matrix[i].length; j++) {
-				System.out.print(matrix[i][j] + " ");
+				System.out.print(String.format("%3d ",matrix[i][j]));
 			}
 			System.out.println(" ");
 		}

@@ -18,7 +18,7 @@ public class Board {
 	}
 
 	public void makeMove() {
-		// (TODO) - I believe here is where we will be doing alot of the strategic planning
+		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
 		// Right now it just outputs whatever the first move in the possibleMoves array
 		possibleMoves.get(0).printMove();
 	}
@@ -34,13 +34,13 @@ public class Board {
 	private void computePossibleMoves() {
 		for(Disk currDisk: blackDisks){
 			updatePossibleMoves(currDisk);
-		}
+		}/*
 		for (int i = 1; i < 9; i++) {
 			for (int j = 1; j < 15; j++) {
 				if (canMoveHere(i, j))
 					possibleMoves.add(new Move(1, i, j));
 			}
-		}
+		}*/
 	}
 	
 	private void updatePossibleMoves(Disk disk){
@@ -55,14 +55,15 @@ public class Board {
 		
 		int dx = 0;
 		int dy = 0;
-		if (dir == 0) { dx = 1;	} // East
-		else if (dir == 1) {dx = 1;	dy = 1;	} // South-East
-		else if (dir == 2) {dx = 0;	dy = 1;	} // South
-		else if (dir == 3) {dx = -1; dy = 1; } // South-West
-		else if (dir == 4) {dx = -1; dy = 0; } // West
-		else if (dir == 5) {dx = -1; dy = -1; } // North-West
-		else if (dir == 6) {dx = 0;	dy = -1; } // North
-		else if (dir == 7) {dx = 1;	dy = -1; } // North-East
+		
+		if (dir == 0) {dx = 0;	dy = -1; } // North
+		else if (dir == 1) {dx = 1;	dy = -1; } // North-East
+		else if (dir == 2) {dx = 1;	dy = 0; } // East
+		else if (dir == 3) {dx = 1;	dy = 1;	} // South-East
+		else if (dir == 4) {dx = 0;	dy = 1;	} // South
+		else if (dir == 5) {dx = -1; dy = 1; } // South-West
+		else if (dir == 6) {dx = -1; dy = 0; } // West
+		else if (dir == 7) {dx = -1; dy = -1; } // North-West
 
 		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)
 			return; //No possible move this way so don't add anything
@@ -71,7 +72,7 @@ public class Board {
 				Cell tempCell = getDisk(x + (dy * i), y + (dx * i)).getCell();
 				if (tempCell == Cell.OPPONENT) {
 					continue;
-				} else if (tempCell == Cell.MINE) {
+				} else if (tempCell == Cell.EMPTY) {
 					//Moving this way is possible so add move to possible move list or update if its already there
 					Move newMove = new Move(1, x + (dy * i), y + (dx * i));
 					if(possibleMoves.contains(newMove)){
@@ -82,7 +83,7 @@ public class Board {
 						possibleMoves.add(newMove);
 					}
 					//Add directional stuff to move
-					newMove.addFlips(Move.Direction.getDir((dir+6)%8), i-1);
+					newMove.addFlips(Move.Direction.getDir(dir), i-1);
 					return;
 				} else {
 					return; //No possible move this way so don't add anything
@@ -90,75 +91,6 @@ public class Board {
 			}
 		}
 		return; //No possible move this way so don't add anything
-	}
-	
-	private boolean canMoveHere(int x, int y) {
-		if (getDisk(x, y).getCell() != Cell.EMPTY)
-			return false;
-		for (int i = 0; i < 8; i++) {// i stands for direction: 0 = east, 1=
-										// south east 2=south etc...
-			if (DirectionCheck(x, y, i))
-				return true;
-		}
-		return false;
-	}
-
-	private boolean DirectionCheck(int x, int y, int dir) {// 0 = east, 1= south, east 2=south, etc...
-		int dx = 0;
-		int dy = 0;
-		if (dir == 0) {
-			dx = 1;
-		} // East
-		else if (dir == 1) {
-			dx = 1;
-			dy = 1;
-		} // South-East
-		else if (dir == 2) {
-			dx = 0;
-			dy = 1;
-		} // South
-		else if (dir == 3) {
-			dx = -1;
-			dy = 1;
-		} // South-West
-		else if (dir == 4) {
-			dx = -1;
-			dy = 0;
-		} // West
-		else if (dir == 5) {
-			dx = -1;
-			dy = -1;
-		} // North-West
-		else if (dir == 6) {
-			dx = 0;
-			dy = -1;
-		} // North
-		else if (dir == 7) {
-			dx = 1;
-			dy = -1;
-		} // North-East
-
-		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)
-			return false;
-		else {
-			for (int i = 2; i < 15; i++) {
-				Cell tempCell = getDisk(x + (dy * i), y + (dx * i)).getCell();
-				if (tempCell == Cell.OPPONENT)
-					continue;
-				else if (tempCell == Cell.MINE)
-					return true;
-				else
-					return false;
-			}
-		}
-		return false;
-	}
-	
-	//Obsolete function... I kept around for reference to special for loop syntax
-	public void printPossibleMoves() {
-		for (Move curr : possibleMoves) {
-			System.out.print(curr.toString());
-		}
 	}
 	
 	public ArrayList<Move> getPossibleMoves() {
@@ -173,7 +105,7 @@ public class Board {
 		System.out.println("Black Disks: "+blackDisks.toString());
 		System.out.println("White Disks: "+whiteDisks.toString());
 		System.out.println("Possible Moves: "+ possibleMoves.toString());
-		System.out.println("     | a b c d e f g h i j k l m n o p");
+		System.out.println("     | 0 1 2 3 4 5 6 7 8 9 A B C D E F");
 		for (int i = 0; i < board.length; i++) {
 			System.out.print("Row " + i + "| ");
 			for (int j = 0; j < board[i].length; j++) {
