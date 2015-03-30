@@ -1,16 +1,30 @@
-//default package
+/**********************************************************
+* Disk Class:
+* 	Holds data for a disk object which contains a
+* 	xPos
+* 	yPos
+* 	cell
+* 
+* 	Even an empty position on a board has a disk with cell type empty or wall 
+* 	depending on if index is contained within the game board
+ **********************************************************/
 
 public class Disk {
 	int xPos, yPos;
 	Cell cell;
-	boolean Stable;
 	
+	/**********************************************************
+	 * Constructor
+	 **********************************************************/
 	public Disk(int x, int y, Cell type){
 		xPos = x;
 		yPos = y;
 		cell = type;
 	}
 	
+	/**********************************************************
+	 * Getters, Setters, toString, and equals
+	 **********************************************************/
 	public int getxPos() {
 		return xPos;
 	}
@@ -29,25 +43,8 @@ public class Disk {
 	public void setCell(Cell cell) {
 		this.cell = cell;
 	}
-	public boolean isStable() {
-		return Stable;
-	}
-	public void setStable(boolean stable) {
-		Stable = stable;
-	}
 	public String toString(){
 		return "("+xPos+","+yPos+"):"+cell.getVal();
-	}
-	public void flip(){
-		if(cell == Cell.MINE) {
-			cell = Cell.OPPONENT;
-			
-		}
-		else if(cell == Cell.OPPONENT){
-			cell = Cell.MINE;
-		} else {
-			System.out.println("Disk type error: expecting MINE or OPPONENENT, recieved: "+cell.getVal());
-		}
 	}
 	public boolean equals(Disk o){
 		if(this.getxPos() == o.getxPos() && this.getyPos() == o.getyPos() &&
@@ -55,5 +52,19 @@ public class Disk {
 			return true;
 		}
 		return false;
+	}
+	
+	/**********************************************************
+	 * Flip method toggles cell type
+	 **********************************************************/
+	public void flip(){
+		if(cell == Cell.MINE) {
+			cell = Cell.OPPONENT;
+		}
+		else if(cell == Cell.OPPONENT){
+			cell = Cell.MINE;
+		} else {
+			System.out.println("Disk type error: expecting MINE or OPPONENENT, recieved: "+cell.getVal());
+		}
 	}
 }

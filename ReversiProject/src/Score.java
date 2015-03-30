@@ -1,3 +1,8 @@
+/**********************************************************
+ * Score Class:
+ * 		contains a 2d array holding generalized position scores for the game reversi
+ * 		getRawScore method returns the current score in the score table
+ **********************************************************/
 
 public class Score {
 	int[][] scores = new int[10][16];

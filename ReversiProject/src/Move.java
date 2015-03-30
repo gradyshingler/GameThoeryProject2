@@ -1,4 +1,11 @@
-
+/**********************************************************
+ * Move Class:
+ * 		Holds data representing a typical move on a reversi board
+ * 			row
+ * 			col
+ * 			player
+ * 			flips
+ **********************************************************/
 
 import java.util.List;
 import java.util.TreeMap;
@@ -12,6 +19,9 @@ public class Move {
 	List<String> BoardChanges;
 	public TreeMap<Direction, Integer> flips;
 	
+	/**********************************************************
+	 * Constructor
+	 **********************************************************/
 	public Move(int p, int r, int c) {
 		row = r;
 		col= c;
@@ -19,6 +29,9 @@ public class Move {
 		flips = new TreeMap<Direction, Integer>();
 	}
 	
+	/**********************************************************
+	 * Getters, Setters, toString and equals
+	 **********************************************************/
 	public void addFlips(Direction dir, int num){
 		flips.put(dir, num);
 	}
@@ -29,6 +42,10 @@ public class Move {
 	
 	public int getPlayer(){
 		return player;
+	}
+	
+	public TreeMap<Direction, Integer> getFlips(){
+		return flips;
 	}
 	
 	public int getRow(){
@@ -51,23 +68,10 @@ public class Move {
 			return col - ((row - 5));
 	}
 	
-	public TreeMap<Direction, Integer> getFlips(){
-		return flips;
-	}
-
-	//This should be used to print the one and final move to submit
-	public void printMove() {
-		System.out.println(getConvertedRow() + " " + getConvertedCol());
+	public String toString() {
+		return "("+row + "," + col+"):"+getFlipScore();
 	}
 	
-	public int getFlipScore(){
-		int toReturn = 0;
-		for(int curr: flips.values()){
-			toReturn+=curr;
-		}
-		return toReturn;
-	}
-
 	public boolean equals(Object o) {
 		if (o instanceof Move) {
 			Move tempMove = (Move) o;
@@ -77,7 +81,21 @@ public class Move {
 		}
 	}
 
-	public String toString() {
-		return "("+row + "," + col+"):"+getFlipScore();
+	/**********************************************************
+	 * Prints the final move to be received by the game server
+	 **********************************************************/
+	public void printMove() {
+		System.out.println(getConvertedRow() + " " + getConvertedCol());
+	}
+	
+	/**********************************************************
+	 * returns the amount of flips this move generates
+	 **********************************************************/
+	public int getFlipScore(){
+		int toReturn = 0;
+		for(int curr: flips.values()){
+			toReturn+=curr;
+		}
+		return toReturn;
 	}
 }

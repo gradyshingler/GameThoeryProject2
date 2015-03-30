@@ -1,3 +1,13 @@
+/**********************************************************
+ * Board Class: 
+ * 		Holds all the data required for a Reversi board
+ * 			Disk[][] board
+ * 			blackDisks
+ * 			whiteDisks
+ * 			possibleMoves
+ * 			scoreChart
+ **********************************************************/
+
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -8,21 +18,36 @@ public class Board {
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 	Score scoreChart;
 
-	/*
-	 * Creates a new board from an int array
-	 */
+	/**********************************************************
+	 * Constructor
+	 **********************************************************/
 	public Board(int[][] array) {
 		scoreChart = new Score();
 		parseToBoardObject(array);
 		possibleMoves = computePossibleMoves(1);
 	}
+	
+	/**********************************************************
+	 * Getters and Setters
+	 **********************************************************/
+	public int getDiskCount(){
+		return blackDisks.size()+whiteDisks.size();
+	}
+
+	public Disk getDisk(int x, int y) {
+		return board[x][y];
+	}
+	
+	public ArrayList<Move> getPossibleMoves() {
+		return possibleMoves;
+	}
 
 	public void makeMove() {
 		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
 		
-		/**********************************************************
+		/*
 		 * Testing Execute Move and flips as well as undoing flips
-		 **********************************************************/
+		 */
 		for(int i=0;i<possibleMoves.size();i++){
 			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			System.out.println("Executing: "+possibleMoves.get(i).toString());
@@ -37,29 +62,10 @@ public class Board {
 		possibleMoves.get(0).printMove();
 	}
 	
-	public int getDiskCount(){
-		return blackDisks.size()+whiteDisks.size();
-	}
-
-	public Disk getDisk(int x, int y) {
-		return board[x][y];
-	}
 	
-	public void flipDisk(Disk disk){
-		if(disk.getCell() == Cell.MINE){
-			blackDisks.remove(disk);
-			whiteDisks.add(disk);
-			disk.flip();
-		} else if(disk.getCell() == Cell.OPPONENT){
-			whiteDisks.remove(disk);
-			blackDisks.add(disk);
-			disk.flip();
-		} else {
-			System.out.println("Disk Type Error: expected MINE or OPPONENENT, recieved: "+disk.getCell().getVal());
-			System.out.println("Disk pos = "+disk.getxPos()+","+disk.getyPos());
-		}
-	}
-	
+	/**********************************************************
+	 * computePossibleMoves Method
+	 **********************************************************/
 	private ArrayList<Move> computePossibleMoves(int player) {
 		ArrayList<Move> tempMoves = new ArrayList<Move>();
 		if(player == 1){
@@ -74,6 +80,10 @@ public class Board {
 		return tempMoves;
 	}
 	
+	
+	/**********************************************************
+	 * Helper methods for computing possible moves
+	 **********************************************************/
 	private void updatePossibleMoves(Disk disk, ArrayList<Move> moves, int player){
 		for(int i=0; i<8;i++){
 			addMoveFromDirection(disk, i, moves, player);
@@ -127,6 +137,9 @@ public class Board {
 		return; //No possible move this way so don't add anything
 	}
 	
+	/**********************************************************
+	 * Execute and Undo methods 
+	 **********************************************************/
 	public void execute(Move move){
 		int row = move.getRow();
 		int col = move.getCol();
@@ -156,6 +169,10 @@ public class Board {
 		executeFlips(move);
 	}
 	
+	
+	/**********************************************************
+	 * Execute and undo Helper Methods
+	 **********************************************************/
 	private void executeFlips(Move move){
 		TreeMap<Direction, Integer> flips = move.getFlips();
 		int row = move.getRow();
@@ -182,13 +199,26 @@ public class Board {
 		}
 	}
 	
-	public ArrayList<Move> getPossibleMoves() {
-		return possibleMoves;
+	private void flipDisk(Disk disk){
+		if(disk.getCell() == Cell.MINE){
+			blackDisks.remove(disk);
+			whiteDisks.add(disk);
+			disk.flip();
+		} else if(disk.getCell() == Cell.OPPONENT){
+			whiteDisks.remove(disk);
+			blackDisks.add(disk);
+			disk.flip();
+		} else {
+			System.out.println("Disk Type Error: expected MINE or OPPONENENT, recieved: "+disk.getCell().getVal());
+			System.out.println("Disk pos = "+disk.getxPos()+","+disk.getyPos());
+		}
 	}
 	
-	/*
-	 * Prints the board for testing purposes
-	 */
+	/**********************************************************
+	 * Various Printing constructs
+	 * 	print - prints with possible moves
+	 *  showBoard - prints without possible moves
+	 **********************************************************/
 	public void print() {
 		System.out.println("Board: disk_Count: " + getDiskCount());
 		System.out.println("Black Disks: "+blackDisks.toString());
@@ -236,7 +266,10 @@ public class Board {
 		}
 	}
 	
-	public void parseToBoardObject(int[][] array){
+	/**********************************************************
+	 * Constructor helper, parses a 2d int array to the 2d disk array field
+	 **********************************************************/
+	private void parseToBoardObject(int[][] array){
 		int rowLength = 8;
 		int wallLength = 4;
 		boolean top = true;
