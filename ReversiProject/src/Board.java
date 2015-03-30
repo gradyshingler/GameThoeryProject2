@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 
 public class Board {
@@ -7,11 +6,13 @@ public class Board {
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
+	Score scoreChart;
 
 	/*
 	 * Creates a new board from an int array
 	 */
 	public Board(int[][] array) {
+		scoreChart = new Score();
 		parseToBoardObject(array);
 		computePossibleMoves();
 	}
@@ -80,13 +81,13 @@ public class Board {
 		int dx = 0;
 		int dy = 0;
 		
-		if (dir == 0) {dx = 0;	dy = -1; } // North
-		else if (dir == 1) {dx = 1;	dy = -1; } // North-East
-		else if (dir == 2) {dx = 1;	dy = 0; } // East
-		else if (dir == 3) {dx = 1;	dy = 1;	} // South-East
-		else if (dir == 4) {dx = 0;	dy = 1;	} // South
-		else if (dir == 5) {dx = -1; dy = 1; } // South-West
-		else if (dir == 6) {dx = -1; dy = 0; } // West
+		if (dir == 0) {dx = 0;	dy = -1; } 		// North
+		else if (dir == 1) {dx = 1;	dy = -1; } 	// North-East
+		else if (dir == 2) {dx = 1;	dy = 0; } 	// East
+		else if (dir == 3) {dx = 1;	dy = 1;	} 	// South-East
+		else if (dir == 4) {dx = 0;	dy = 1;	} 	// South
+		else if (dir == 5) {dx = -1; dy = 1; } 	// South-West
+		else if (dir == 6) {dx = -1; dy = 0; } 	// West
 		else if (dir == 7) {dx = -1; dy = -1; } // North-West
 
 		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)

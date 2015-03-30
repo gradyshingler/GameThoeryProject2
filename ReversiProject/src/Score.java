@@ -7,6 +7,15 @@ public class Score {
 		reversi.printMatrix(scores);
 	}
 	
+	public int getRawScore(int row, int col){
+		return scores[row][col];
+	}
+	
+	//This is where we will have check for how the score should change based on the current board input
+	public int getAdjustScore(int row, int col, Board board){
+		return getRawScore(row, col);
+	}
+	
 	private void setScoreTable(){
 		int rowLength = 8;
 		int wallLength = 4;

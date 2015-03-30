@@ -17,7 +17,6 @@ public class reversi {
 
 		rawBoard = parseBoard();
 
-		Score rawScoreChart = new Score();
 		myBoard = new Board(rawBoard);
 		if(LOCAL_TEST) myBoard.print();
 		if(LOCAL_TEST) System.out.println("Converted move index: "); myBoard.makeMove();
