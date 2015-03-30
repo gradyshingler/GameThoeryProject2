@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
-
-
+import java.util.TreeMap;
 
 public class Board {
-	static Disk[][] board = new Disk[10][16];
+	Disk[][] board = new Disk[10][16];
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
-	static ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
-	static ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
+	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
+	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
 
 	/*
 	 * Creates a new board from an int array
@@ -20,6 +19,22 @@ public class Board {
 	public void makeMove() {
 		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
 		// Right now it just outputs whatever the first move in the possibleMoves array
+		
+		/* 
+		 * Testing Execute Move and flips as well as undoing flips
+		 */
+		
+		for(int i=0;i<possibleMoves.size();i++){
+			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			System.out.println("Executing: "+possibleMoves.get(i).toString());
+			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
+			execute(possibleMoves.get(i));
+			showBoard();
+			System.out.println("Undoing: "+possibleMoves.get(i).toString());
+			undo(possibleMoves.get(i));
+			showBoard();
+		}
+		
 		possibleMoves.get(0).printMove();
 	}
 	
@@ -34,13 +49,22 @@ public class Board {
 	private void computePossibleMoves() {
 		for(Disk currDisk: blackDisks){
 			updatePossibleMoves(currDisk);
-		}/*
-		for (int i = 1; i < 9; i++) {
-			for (int j = 1; j < 15; j++) {
-				if (canMoveHere(i, j))
-					possibleMoves.add(new Move(1, i, j));
-			}
-		}*/
+		}
+	}
+	
+	public void flipDisk(Disk disk){
+		if(disk.getCell() == Cell.MINE){
+			blackDisks.remove(disk);
+			whiteDisks.add(disk);
+			disk.flip();
+		} else if(disk.getCell() == Cell.OPPONENT){
+			whiteDisks.remove(disk);
+			blackDisks.add(disk);
+			disk.flip();
+		} else {
+			System.out.println("Disk Type Error: expected MINE or OPPONENENT, recieved: "+disk.getCell().getVal());
+			System.out.println("Disk pos = "+disk.getxPos()+","+disk.getyPos());
+		}
 	}
 	
 	private void updatePossibleMoves(Disk disk){
@@ -83,7 +107,7 @@ public class Board {
 						possibleMoves.add(newMove);
 					}
 					//Add directional stuff to move
-					newMove.addFlips(Move.Direction.getDir(dir), i-1);
+					newMove.addFlips(Direction.getDir((dir+4)%8), i-1); //The ((dir+4)%8) changes the direction 180 for the execute methods
 					return;
 				} else {
 					return; //No possible move this way so don't add anything
@@ -91,6 +115,61 @@ public class Board {
 			}
 		}
 		return; //No possible move this way so don't add anything
+	}
+	
+	public void execute(Move move){
+		int row = move.getRow();
+		int col = move.getCol();
+		if(move.getPlayer() == 1){
+			Disk newDisk = new Disk(row, col, Cell.MINE);
+			board[row][col] = newDisk;
+			blackDisks.add(newDisk);
+		} else {
+			Disk newDisk = new Disk(row, col, Cell.OPPONENT);
+			board[row][col] = newDisk;
+			whiteDisks.add(newDisk);
+		}
+		executeFlips(move);
+	}
+	
+	public void undo(Move move){
+		int row = move.getRow();
+		int col = move.getCol();
+		int player = move.getPlayer();
+		Disk oldDisk = board[row][col];
+		board[row][col] = new Disk(row,col,Cell.EMPTY);
+		if(player == 1){
+			blackDisks.remove(oldDisk);
+		}else{
+			whiteDisks.remove(oldDisk);
+		}
+		executeFlips(move);
+	}
+	
+	private void executeFlips(Move move){
+		TreeMap<Direction, Integer> flips = move.getFlips();
+		int row = move.getRow();
+		int col = move.getCol();
+		
+		for (Direction dir : flips.keySet()){
+			int dx = 0;
+			int dy = 0;
+			
+			if (dir == Direction.N) {dx = 0;	dy = -1; } 		// North
+			else if (dir == Direction.NE) {dx = 1;	dy = -1; } 	// North-East
+			else if (dir == Direction.E) {dx = 1;	dy = 0; } 	// East
+			else if (dir == Direction.SE) {dx = 1;	dy = 1;	} 	// South-East
+			else if (dir == Direction.S) {dx = 0;	dy = 1;	} 	// South
+			else if (dir == Direction.SW) {dx = -1; dy = 1; } 	// South-West
+			else if (dir == Direction.W) {dx = -1; dy = 0; } 	// West
+			else if (dir == Direction.NW) {dx = -1; dy = -1; } 	// North-West
+			else {System.out.printf("Direction Error in Board.executeFlips"); }
+			
+			for(int i = 1 ; i <= flips.get(dir); i++)
+			{
+				flipDisk(board[row+(dy*i)][col+(dx*i)]);
+			}
+		}
 	}
 	
 	public ArrayList<Move> getPossibleMoves() {
@@ -120,6 +199,27 @@ public class Board {
 					}else{
 						System.out.print(board[i][j].getCell().getVal() + " ");
 					}
+				}
+			}
+			System.out.println(" ");
+		}
+	}
+	
+	public void showBoard() {
+		System.out.println("Board: disk_Count: " + getDiskCount());
+		System.out.println("Black Disks: "+blackDisks.toString());
+		System.out.println("White Disks: "+whiteDisks.toString());
+		System.out.println("     | 0 1 2 3 4 5 6 7 8 9 A B C D E F");
+		for (int i = 0; i < board.length; i++) {
+			System.out.print("Row " + i + "| ");
+			for (int j = 0; j < board[i].length; j++) {
+				String val = board[i][j].getCell().getVal();
+				if(val.equals("0")){
+					System.out.print("- ");//2 spaces
+				}else if(val.equals("3")){
+					System.out.print("  ");//+ and space
+				}else{
+					System.out.print(board[i][j].getCell().getVal() + " ");
 				}
 			}
 			System.out.println(" ");

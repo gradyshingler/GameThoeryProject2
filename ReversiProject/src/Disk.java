@@ -41,13 +41,12 @@ public class Disk {
 	public void flip(){
 		if(cell == Cell.MINE) {
 			cell = Cell.OPPONENT;
-			Board.blackDisks.remove(this);
-			Board.whiteDisks.add(this);
+			
 		}
 		else if(cell == Cell.OPPONENT){
 			cell = Cell.MINE;
-			Board.whiteDisks.remove(this);
-			Board.blackDisks.add(this);
+		} else {
+			System.out.println("Disk type error: expecting MINE or OPPONENENT, recieved: "+cell.getVal());
 		}
 	}
 	public boolean equals(Disk o){

@@ -1,8 +1,5 @@
 // A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse Averbukh (112324599)
 
-
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;

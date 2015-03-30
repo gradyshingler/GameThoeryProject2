@@ -25,7 +25,7 @@ public class Score {
 					//spaces where moves are possible
 					if(i == 1 || i == 8){
 						if(j == 4 || j == 11) scores[i][j] = 99;
-						else if(j==5 || j==10) scores[i][j] = -10;
+						else if(j==5 || j==10) scores[i][j] = -20;
 						else if(j==6 || j==9) scores[i][j] = 15;
 						else if(j==7||j==8)	scores[i][j] = 10;
 					}
