@@ -160,12 +160,12 @@ public class Board {
 		int col = move.getCol();
 		int player = move.getPlayer();
 		Disk oldDisk = board[row][col];
-		board[row][col] = new Disk(row,col,Cell.EMPTY);
 		if(player == 1){
 			blackDisks.remove(oldDisk);
 		}else{
 			whiteDisks.remove(oldDisk);
 		}
+		board[row][col].setCell(Cell.EMPTY);
 		executeFlips(move);
 	}
 	
