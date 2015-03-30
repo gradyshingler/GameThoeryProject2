@@ -3,9 +3,9 @@ import java.util.TreeMap;
 
 public class Board {
 	Disk[][] board = new Disk[10][16];
-	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
+	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 	Score scoreChart;
 
 	/*
@@ -14,17 +14,15 @@ public class Board {
 	public Board(int[][] array) {
 		scoreChart = new Score();
 		parseToBoardObject(array);
-		computePossibleMoves();
+		possibleMoves = computePossibleMoves(1);
 	}
 
 	public void makeMove() {
 		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
-		// Right now it just outputs whatever the first move in the possibleMoves array
 		
-		/* 
+		/**********************************************************
 		 * Testing Execute Move and flips as well as undoing flips
-		 */
-		
+		 **********************************************************/
 		for(int i=0;i<possibleMoves.size();i++){
 			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			System.out.println("Executing: "+possibleMoves.get(i).toString());
@@ -46,12 +44,6 @@ public class Board {
 	public Disk getDisk(int x, int y) {
 		return board[x][y];
 	}
-
-	private void computePossibleMoves() {
-		for(Disk currDisk: blackDisks){
-			updatePossibleMoves(currDisk);
-		}
-	}
 	
 	public void flipDisk(Disk disk){
 		if(disk.getCell() == Cell.MINE){
@@ -68,19 +60,36 @@ public class Board {
 		}
 	}
 	
-	private void updatePossibleMoves(Disk disk){
+	private ArrayList<Move> computePossibleMoves(int player) {
+		ArrayList<Move> tempMoves = new ArrayList<Move>();
+		if(player == 1){
+			for(Disk currDisk: blackDisks){
+				updatePossibleMoves(currDisk, tempMoves, player);
+			}
+		} else if(player == 2){
+			for(Disk currDisk: whiteDisks){
+				updatePossibleMoves(currDisk, tempMoves, player);
+			}
+		}
+		return tempMoves;
+	}
+	
+	private void updatePossibleMoves(Disk disk, ArrayList<Move> moves, int player){
 		for(int i=0; i<8;i++){
-			addMoveFromDirection(disk, i);
+			addMoveFromDirection(disk, i, moves, player);
 		}
 	}
 
-	private void addMoveFromDirection(Disk disk, int dir){
+	private void addMoveFromDirection(Disk disk, int dir, ArrayList<Move> moves, int player){		
 		int x = disk.getxPos();
 		int y = disk.getyPos();
+
+		Cell otherType = Cell.WALL;		
+		if(player == 1){ otherType = Cell.OPPONENT; }
+		else if(player == 2) { otherType = Cell.MINE; }
 		
 		int dx = 0;
-		int dy = 0;
-		
+		int dy = 0;		
 		if (dir == 0) {dx = 0;	dy = -1; } 		// North
 		else if (dir == 1) {dx = 1;	dy = -1; } 	// North-East
 		else if (dir == 2) {dx = 1;	dy = 0; } 	// East
@@ -90,22 +99,22 @@ public class Board {
 		else if (dir == 6) {dx = -1; dy = 0; } 	// West
 		else if (dir == 7) {dx = -1; dy = -1; } // North-West
 
-		if (getDisk(x + dy, y + dx).getCell() != Cell.OPPONENT)
+		if (getDisk(x + dy, y + dx).getCell() != otherType)
 			return; //No possible move this way so don't add anything
 		else {
 			for (int i = 2; i < 15; i++) {
 				Cell tempCell = getDisk(x + (dy * i), y + (dx * i)).getCell();
-				if (tempCell == Cell.OPPONENT) {
+				if (tempCell == otherType) {
 					continue;
 				} else if (tempCell == Cell.EMPTY) {
 					//Moving this way is possible so add move to possible move list or update if its already there
-					Move newMove = new Move(1, x + (dy * i), y + (dx * i));
-					if(possibleMoves.contains(newMove)){
+					Move newMove = new Move(player, x + (dy * i), y + (dx * i));
+					if(moves.contains(newMove)){
 						//get Move and add direction and int to it
-						newMove = possibleMoves.get(possibleMoves.indexOf(newMove));
+						newMove = moves.get(moves.indexOf(newMove));
 					} else {
 						//insert Move to possible Moves
-						possibleMoves.add(newMove);
+						moves.add(newMove);
 					}
 					//Add directional stuff to move
 					newMove.addFlips(Direction.getDir((dir+4)%8), i-1); //The ((dir+4)%8) changes the direction 180 for the execute methods
