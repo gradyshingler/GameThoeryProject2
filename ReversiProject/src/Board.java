@@ -144,12 +144,12 @@ public class Board {
 		int row = move.getRow();
 		int col = move.getCol();
 		if(move.getPlayer() == 1){
-			Disk newDisk = new Disk(row, col, Cell.MINE);
-			board[row][col] = newDisk;
+			Disk newDisk = board[row][col];//Disk newDisk = new Disk(row, col, Cell.MINE);
+			newDisk.setCell(Cell.MINE);//board[row][col] = newDisk;
 			blackDisks.add(newDisk);
 		} else {
-			Disk newDisk = new Disk(row, col, Cell.OPPONENT);
-			board[row][col] = newDisk;
+			Disk newDisk = board[row][col]; //Disk newDisk = new Disk(row, col, Cell.OPPONENT);
+			newDisk.setCell(Cell.OPPONENT);//board[row][col] = newDisk;
 			whiteDisks.add(newDisk);
 		}
 		executeFlips(move);
