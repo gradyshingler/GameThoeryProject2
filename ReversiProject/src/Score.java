@@ -7,9 +7,15 @@
 public class Score {
 	int[][] scores = new int[10][16];
 	
-	public Score(){
-		setScoreTable();
-		reversi.printMatrix(scores);
+	public Score(Board board){
+		setScoreTable(); //Sets the raw score board
+		for(Disk current: board.whiteDisks){
+			adjustChart(current.xPos,current.yPos);
+		}
+		for(Disk current: board.blackDisks){
+			adjustChart(current.xPos,current.yPos);
+		}
+		//reversi.printMatrix(scores);
 	}
 	
 	public int getRawScore(int row, int col){

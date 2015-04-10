@@ -9,7 +9,8 @@ public class reversi {
 
 	final static boolean LOCAL_TEST = true;
 	final static File testFile1 = new File("src/testFile.readBoard");
-	final static File fileToTest = testFile1;
+	final static File testFile2 = new File("src/cornerCase.readBoard");
+	final static File fileToTest = testFile2;
 
 	public static void main(String[] args) {
 		int[][] rawBoard = new int[8][];
@@ -18,8 +19,9 @@ public class reversi {
 		rawBoard = parseBoard();
 
 		myBoard = new Board(rawBoard);
-		if(LOCAL_TEST) myBoard.print();
-		if(LOCAL_TEST) System.out.println("Converted move index: "); myBoard.makeMove();
+		myBoard.makeMove();
+		//if(LOCAL_TEST) myBoard.print();
+		//if(LOCAL_TEST) System.out.println("Converted move index: ");
 	}
 
 	/*

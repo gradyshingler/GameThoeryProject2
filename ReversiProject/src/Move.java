@@ -13,11 +13,9 @@ import java.util.TreeMap;
 public class Move {
 	int row;
 	int col;
-	int PrevScore;
-	int CurrScore;
 	int player;// 1 is player1, 2 is player2
-	List<String> BoardChanges;
 	public TreeMap<Direction, Integer> flips;
+	int positionScore = 0;
 	
 	/**********************************************************
 	 * Constructor
@@ -34,10 +32,6 @@ public class Move {
 	 **********************************************************/
 	public void addFlips(Direction dir, int num){
 		flips.put(dir, num);
-	}
-	
-	public void addBoardChange(int r, int c, int sc1, int sc2){
-		BoardChanges.add(r + "," + c + "," + sc1 + "," + sc2);
 	}
 	
 	public int getPlayer(){
@@ -69,7 +63,7 @@ public class Move {
 	}
 	
 	public String toString() {
-		return "("+row + "," + col+"):"+getFlipScore();
+		return "("+row + "," + col+"):"+positionScore;
 	}
 	
 	public boolean equals(Object o) {
@@ -81,6 +75,23 @@ public class Move {
 		}
 	}
 
+	/**********************************************************
+	 * compareTo
+	 **********************************************************/
+	public int compareTo(Move o) {
+		if(this.positionScore < o.positionScore) return -1;
+		else if(this.positionScore > o.positionScore) return 1;
+		else {
+			if(this.row < o.row) return -1;
+			else if(this.row > o.row) return 1;
+			else {
+				if(this.col < o.col) return -1;
+				else if(this.col > o.col) return 1;
+				else return 0;
+			}
+		}
+	}
+	
 	/**********************************************************
 	 * Prints the final move to be received by the game server
 	 **********************************************************/

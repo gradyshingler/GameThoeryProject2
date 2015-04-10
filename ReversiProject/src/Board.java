@@ -9,6 +9,7 @@
  **********************************************************/
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.TreeMap;
 
 public class Board {
@@ -22,8 +23,8 @@ public class Board {
 	 * Constructor
 	 **********************************************************/
 	public Board(int[][] array) {
-		scoreChart = new Score();
 		parseToBoardObject(array);
+		scoreChart = new Score(this);
 		possibleMoves = computePossibleMoves(1);
 	}
 	
@@ -48,18 +49,26 @@ public class Board {
 		/*
 		 * Testing Execute Move and flips as well as undoing flips
 		 */
-		for(int i=0;i<possibleMoves.size();i++){
+		/*for(int i=0;i<possibleMoves.size();i++){
 			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-			System.out.println("Executing: "+possibleMoves.get(i).toString());
-			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
 			int total = getMoveScore(possibleMoves.get(i));
 			System.out.println("getMoveScore: "+ possibleMoves.get(i).toString()+" = "+total);
+			System.out.println("Executing: "+possibleMoves.get(i).toString());
+			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
 			execute(possibleMoves.get(i));
 			showBoard();
 			System.out.println("Undoing: "+possibleMoves.get(i).toString());
 			undo(possibleMoves.get(i));
 			showBoard();
+		}*/
+		
+		for(int i=0;i<possibleMoves.size();i++){
+			getMoveScore(possibleMoves.get(i));
 		}
+		
+		Collections.sort(possibleMoves, new MoveComparator());
+		
+		System.out.println("Possible Moves: "+ possibleMoves.toString());
 		
 		possibleMoves.get(0).printMove();
 	}
@@ -219,14 +228,15 @@ public class Board {
 	}
 	
 	/**********************************************************
-	 * Compute A Moves Position Score
+	 * Compute A Moves Position Score and sets the move score to that value
 	 **********************************************************/
 	private int getMoveScore(Move move){
 		TreeMap<Direction, Integer> flips = move.getFlips();
 		int row = move.getRow();
 		int col = move.getCol();
-		int total = scoreChart.getRawScore(row,col);
 		scoreChart.adjustChart(row, col);
+		int total = scoreChart.getRawScore(row,col);
+		//System.out.println("pos: "+row+","+(col)+" has a score of: "+total);
 		
 		for (Direction dir : flips.keySet()){
 			int dx = 0;
@@ -245,11 +255,12 @@ public class Board {
 			for(int i = 1 ; i <= flips.get(dir); i++)
 			{
 				int tempScore = scoreChart.getRawScore(row+(dy*i), col+(dx*i));
-				System.out.println("pos: "+(row+(dy*i))+","+(col+(dx*i))+" has a score of: "+tempScore);
+				//System.out.println("pos: "+(row+(dy*i))+","+(col+(dx*i))+" has a score of: "+tempScore);
 				total+=tempScore;
 			}
 		}
 		scoreChart.adjustChart(row, col);
+		move.positionScore = total;
 		return total;
 	}
 	
