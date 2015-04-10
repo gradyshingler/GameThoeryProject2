@@ -51,6 +51,7 @@ public class reversi {
 			try {
 				File file = fileToTest;
 				sc = new Scanner(file);
+				//sc = new Scanner(System.in);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				sc = null;

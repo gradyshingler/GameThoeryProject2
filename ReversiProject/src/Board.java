@@ -68,7 +68,7 @@ public class Board {
 		
 		Collections.sort(possibleMoves, new MoveComparator());
 		
-		System.out.println("Possible Moves: "+ possibleMoves.toString());
+		//System.out.println("Possible Moves: "+ possibleMoves.toString());
 		
 		possibleMoves.get(0).printMove();
 	}
