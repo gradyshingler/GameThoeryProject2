@@ -16,6 +16,70 @@ public class Score {
 		return scores[row][col];
 	}
 	
+	public void adjustChart(int row, int col){
+		/****************************************
+		 * Adjust score chart based on corners
+		 ****************************************/
+		switch (row) {
+			case 1:	
+				if(col == 4) {
+					scores[2][3]*=-1;
+					scores[2][4]*=-1;
+					scores[2][5]*=-1;
+					scores[1][5]*=-1;
+				} else if(col == 6){
+					scores[2][6]*=-1;
+				} else if(col == 7){
+					scores[2][7]*=-1;
+				} else if(col == 8){
+					scores[2][8]*=-1;
+				} else if(col == 9){
+					scores[2][9]*=-1;
+				} else if(col == 11) {
+					scores[2][10]*=-1;
+					scores[2][11]*=-1;
+					scores[2][12]*=-1;
+					scores[1][10]*=-1;
+				} break;
+			case 4: 
+				if(col == 1){
+					scores[3][2]*=-1;
+					scores[4][2]*=-1;
+				} else 	if(col == 14){
+					scores[3][13]*=-1;
+					scores[4][13]*=-1;
+				} break;
+			case 5: 
+				if(col == 1){
+					scores[5][2]*=-1;
+					scores[6][2]*=-1;
+				} else 	if(col == 14){
+					scores[5][13]*=-1;
+					scores[6][13]*=-1;
+				} break;
+			case 8: 
+				if(col == 4) {
+					scores[7][3]*=-1;
+					scores[7][4]*=-1;
+					scores[7][5]*=-1;
+					scores[8][5]*=-1;
+				} else if(col == 6){
+					scores[7][6]*=-1;
+				} else if(col == 7){
+					scores[7][7]*=-1;
+				} else if(col == 8){
+					scores[7][8]*=-1;
+				} else if(col == 9){
+					scores[7][9]*=-1;
+				} else if(col == 11) {
+					scores[7][10]*=-1;
+					scores[7][11]*=-1;
+					scores[7][12]*=-1;
+					scores[8][10]*=-1;
+				} break;
+		}
+	}
+	
 	//This is where we will have check for how the score should change based on the current board input
 	public int getAdjustScore(int row, int col, Board board){
 		return getRawScore(row, col);

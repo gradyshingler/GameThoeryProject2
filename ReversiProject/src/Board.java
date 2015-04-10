@@ -16,7 +16,7 @@ public class Board {
 	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
-	Score scoreChart;
+	static Score scoreChart;
 
 	/**********************************************************
 	 * Constructor
@@ -52,6 +52,8 @@ public class Board {
 			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			System.out.println("Executing: "+possibleMoves.get(i).toString());
 			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
+			int total = getMoveScore(possibleMoves.get(i));
+			System.out.println("getMoveScore: "+ possibleMoves.get(i).toString()+" = "+total);
 			execute(possibleMoves.get(i));
 			showBoard();
 			System.out.println("Undoing: "+possibleMoves.get(i).toString());
@@ -152,6 +154,7 @@ public class Board {
 			newDisk.setCell(Cell.OPPONENT);//board[row][col] = newDisk;
 			whiteDisks.add(newDisk);
 		}
+		scoreChart.adjustChart(row, col);
 		executeFlips(move);
 	}
 	
@@ -165,6 +168,7 @@ public class Board {
 		}else{
 			whiteDisks.remove(oldDisk);
 		}
+		scoreChart.adjustChart(row, col);
 		board[row][col].setCell(Cell.EMPTY);
 		executeFlips(move);
 	}
@@ -212,6 +216,41 @@ public class Board {
 			System.out.println("Disk Type Error: expected MINE or OPPONENENT, recieved: "+disk.getCell().getVal());
 			System.out.println("Disk pos = "+disk.getxPos()+","+disk.getyPos());
 		}
+	}
+	
+	/**********************************************************
+	 * Compute A Moves Position Score
+	 **********************************************************/
+	private int getMoveScore(Move move){
+		TreeMap<Direction, Integer> flips = move.getFlips();
+		int row = move.getRow();
+		int col = move.getCol();
+		int total = scoreChart.getRawScore(row,col);
+		scoreChart.adjustChart(row, col);
+		
+		for (Direction dir : flips.keySet()){
+			int dx = 0;
+			int dy = 0;
+			
+			if (dir == Direction.N) {dx = 0;	dy = -1; } 		// North
+			else if (dir == Direction.NE) {dx = 1;	dy = -1; } 	// North-East
+			else if (dir == Direction.E) {dx = 1;	dy = 0; } 	// East
+			else if (dir == Direction.SE) {dx = 1;	dy = 1;	} 	// South-East
+			else if (dir == Direction.S) {dx = 0;	dy = 1;	} 	// South
+			else if (dir == Direction.SW) {dx = -1; dy = 1; } 	// South-West
+			else if (dir == Direction.W) {dx = -1; dy = 0; } 	// West
+			else if (dir == Direction.NW) {dx = -1; dy = -1; } 	// North-West
+			else {System.out.printf("Direction Error in Board.executeFlips"); }
+			
+			for(int i = 1 ; i <= flips.get(dir); i++)
+			{
+				int tempScore = scoreChart.getRawScore(row+(dy*i), col+(dx*i));
+				System.out.println("pos: "+(row+(dy*i))+","+(col+(dx*i))+" has a score of: "+tempScore);
+				total+=tempScore;
+			}
+		}
+		scoreChart.adjustChart(row, col);
+		return total;
 	}
 	
 	/**********************************************************
