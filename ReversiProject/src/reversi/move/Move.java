@@ -1,3 +1,4 @@
+package reversi.move;
 /**********************************************************
  * Move Class:
  * 		Holds data representing a typical move on a reversi board
@@ -15,7 +16,7 @@ public class Move {
 	int col;
 	int player;// 1 is player1, 2 is player2
 	public TreeMap<Direction, Integer> flips;
-	int positionScore = 0;
+	public int positionScore = 0;
 	
 	/**********************************************************
 	 * Constructor

@@ -1,3 +1,5 @@
+package reversi.pieces;
+
 /**********************************************************
 * Disk Class:
 * 	Holds data for a disk object which contains a

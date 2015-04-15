@@ -1,3 +1,6 @@
+package reversi.evaluation;
+import reversi.move.Move;
+
 
 public class State {
 	public State previous;

@@ -1,4 +1,8 @@
+package reversi.evaluation;
 import java.util.ArrayList;
+
+import reversi.move.Move;
+import reversi.pieces.Board;
 
 
 public class ReadFuture {

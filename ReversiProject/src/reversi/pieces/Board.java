@@ -1,3 +1,4 @@
+package reversi.pieces;
 /**********************************************************
  * Board Class: 
  * 		Holds all the data required for a Reversi board
@@ -8,14 +9,22 @@
  * 			scoreChart
  **********************************************************/
 
+
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
 
+import reversi.evaluation.Score;
+import reversi.move.Direction;
+import reversi.move.Move;
+import reversi.move.MoveComparator;
+
 public class Board {
 	Disk[][] board = new Disk[10][16];
-	ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
-	ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
+	public ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
+	public ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
 	ArrayList<Move> possibleMoves = new ArrayList<Move>();
 	static Score scoreChart;
 

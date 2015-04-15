@@ -1,3 +1,7 @@
+package reversi.evaluation;
+import reversi.pieces.Board;
+import reversi.pieces.Disk;
+
 /**********************************************************
  * Score Class:
  * 		contains a 2d array holding generalized position scores for the game reversi
@@ -10,10 +14,10 @@ public class Score {
 	public Score(Board board){
 		setScoreTable(); //Sets the raw score board
 		for(Disk current: board.whiteDisks){
-			adjustChart(current.xPos,current.yPos);
+			adjustChart(current.getxPos(),current.getyPos());
 		}
 		for(Disk current: board.blackDisks){
-			adjustChart(current.xPos,current.yPos);
+			adjustChart(current.getxPos(),current.getyPos());
 		}
 		//reversi.printMatrix(scores);
 	}
