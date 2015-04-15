@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import reversi.move.Move;
 import reversi.pieces.Board;
 
-
-public class ReadFuture {
+//
+public class MoveEvaluator {
 private State[] Future;//Serves as our "tree" but in array form
 	
-	public ReadFuture(ArrayList<Move> possibleMoves, int choices, int MovesDeep, Board board)
+	public MoveEvaluator(ArrayList<Move> possibleMoves, int choices, int MovesDeep, Board board)
 	{
 		/*FOR SIZE: This is how you calculate the size of full k-ary tree... (K^n - 1)/(K-1) ... we'll 
 		 * probably use 4 here for K, but I made it so it work for any k-ary tree of varying height so we
