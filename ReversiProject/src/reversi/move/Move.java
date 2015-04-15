@@ -17,6 +17,7 @@ public class Move {
 	int player;// 1 is player1, 2 is player2
 	public TreeMap<Direction, Integer> flips;
 	public int positionScore = 0;
+	public int consequenceScore = 0;
 	
 	/**********************************************************
 	 * Constructor
@@ -64,7 +65,8 @@ public class Move {
 	}
 	
 	public String toString() {
-		return "("+row + "," + col+"):"+positionScore;
+		//return "<("+row + "," + col+"): P["+positionScore+"] C["+consequenceScore+"]>";
+		return "<("+row + "," + col+"):"+(positionScore+consequenceScore)+"]>";
 	}
 	
 	public boolean equals(Object o) {

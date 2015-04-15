@@ -22,6 +22,8 @@ import reversi.move.Move;
 import reversi.move.MoveComparator;
 
 public class Board {
+	private final int NO_MOVE_SCORE = 20;
+	
 	Disk[][] board = new Disk[10][16];
 	public ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	public ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
@@ -74,14 +76,58 @@ public class Board {
 		for(int i=0;i<possibleMoves.size();i++){
 			getMoveScore(possibleMoves.get(i));
 		}
-		
+		System.out.println("Possible Moves: "+ possibleMoves.toString());
+		calculateConsequences(possibleMoves, 5, 0, 1);
+		System.out.println("Possible Moves: "+ possibleMoves.toString());
 		Collections.sort(possibleMoves, new MoveComparator());
 		
 		//System.out.println("Possible Moves: "+ possibleMoves.toString());
 		
 		possibleMoves.get(0).printMove();
 	}
+	/**********************************************************
+	 * computePossibleMoves Method
+	 **********************************************************/
+	private void calculateConsequences(ArrayList<Move> moves, int depth, int pruneVal, int player){
+		player = (player%2)+1;
+		//p("newPlayer: "+player+" search depth: "+depth,pruneVal);
+		pruneVal++;
+		
+		for(Move currMove: moves){
+			execute(currMove);
+			//p("If player<"+((player%2)+1)+"> moves "+currMove+" then player<"+player+"> can move",pruneVal);
+			ArrayList<Move> nextMoves = computePossibleMoves(player);
+			//p(""+ nextMoves.toString(),pruneVal);
+			if(nextMoves.size() != 0){
+				for(int i=0;i<nextMoves.size();i++){
+					getMoveScore(nextMoves.get(i));
+				}
+				//p("nextMoves w/ posS: "+ nextMoves.toString(),pruneVal);
+				Collections.sort(nextMoves, new MoveComparator());
+				if(depth > 0){
+					calculateConsequences(nextMoves, depth-1, pruneVal, player);
+				}
+				//p("  "+ nextMoves.toString(),pruneVal);
+				Collections.sort(nextMoves, new MoveComparator());
+				Move minMaxMove;
+				if(player == 1) minMaxMove = nextMoves.get(0);
+				else if(player == 2) minMaxMove = nextMoves.get(nextMoves.size()-1);
+				else throw new IllegalStateException();
+				//p("  but player<"+player+">'s best move is: "+minMaxMove,pruneVal);
+				currMove.consequenceScore = (minMaxMove.positionScore+minMaxMove.consequenceScore)*-1;
+			} else {
+				currMove.consequenceScore = NO_MOVE_SCORE; 
+			}
+			undo(currMove);
+		}
+	}
 	
+	private void p(String msg, int tabSpace){
+		return;/*
+		for(int i=0; i<=tabSpace;i++)
+			System.out.print("  ");
+		System.out.println(msg);	*/	
+	}
 	
 	/**********************************************************
 	 * computePossibleMoves Method
