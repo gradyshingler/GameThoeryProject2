@@ -2,16 +2,7 @@ import java.util.ArrayList;
 
 
 public class ReadFuture {
-	 class State{
-		 public int score;
-		 public Move move;
-		public State(int sc, Move m)
-		{
-			score = sc;
-			move = m;
-		}
-	}
-	 private State[] Future;//Serves as our "tree" but in array form
+private State[] Future;//Serves as our "tree" but in array form
 	
 	public ReadFuture(ArrayList<Move> possibleMoves, int choices, int MovesDeep, Board board)
 	{
