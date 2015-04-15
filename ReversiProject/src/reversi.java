@@ -10,7 +10,7 @@ public class reversi {
 	final static boolean LOCAL_TEST = true;
 	final static File testFile1 = new File("src/testFile.readBoard");
 	final static File testFile2 = new File("src/cornerCase.readBoard");
-	final static File fileToTest = testFile2;
+	final static File fileToTest = testFile1;
 
 	public static void main(String[] args) {
 		int[][] rawBoard = new int[8][];
