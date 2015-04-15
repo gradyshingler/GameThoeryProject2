@@ -13,6 +13,11 @@ public class State {
 	public State(Move move){
 		this.move = move;
 	}
+	/*Constructor for the actual state of the game where we will give the state its move options as the form of
+	State[] children*/
+	public State(State[] children){
+		this.children = children;
+	}
 	public State getPrevious(){
 		return previous;
 	}
@@ -25,18 +30,19 @@ public class State {
 	public State[] getChlildren(){
 		return this.children;
 	}
-	public int trueScore(){
+	public void trueScore(){
 		//LEAF STATE
 		if(children == null){
-			return this.score;
+			//Not sure??? I need this position Score to be relative to player 1...
+			this.score = this.move.positionScore;
 		}
-		//PLAYER 1
+		//PLAYER 1 trying to maximize
 		if(player1 == true){
 			int best = 0;
 			for(int i = 0; i < 4; i++){
 				int s;
 				if(children[i] != null){
-					s = children[i].trueScore();
+					s = children[i].getScore();
 				}else{
 					s = 0;
 				}
@@ -44,13 +50,13 @@ public class State {
 					best = s;
 				}
 			}
-			return best;	
-		}else{//PLAYER 2
+			this.score = best;	
+		}else{//PLAYER 2 trying to minimize
 			int best = Integer.MAX_VALUE;
 			for(int i = 0; i < 4; i++){
 				int s;
 				if(children[i] != null){
-					s = children[i].trueScore();
+					s = children[i].getScore();
 				}else{
 					s = Integer.MAX_VALUE;
 				}
@@ -58,7 +64,7 @@ public class State {
 					best = s;
 				}
 			}
-			return best;	
+			this.score = best;	
 		}
 	}
 	
