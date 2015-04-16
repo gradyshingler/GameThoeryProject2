@@ -14,6 +14,7 @@ package reversi.pieces;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.TreeMap;
 
 import reversi.evaluation.Score;
@@ -23,11 +24,12 @@ import reversi.move.MoveComparator;
 
 public class Board {
 	private final int NO_MOVE_SCORE = 20;
+	private final int CUT_VAL = 4;
 	
 	Disk[][] board = new Disk[10][16];
 	public ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	public ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
-	ArrayList<Move> possibleMoves = new ArrayList<Move>();
+	List<Move> possibleMoves = new ArrayList<Move>();
 	static Score scoreChart;
 
 	/**********************************************************
@@ -50,7 +52,7 @@ public class Board {
 		return board[x][y];
 	}
 	
-	public ArrayList<Move> getPossibleMoves() {
+	public List<Move> getPossibleMoves() {
 		return possibleMoves;
 	}
 
@@ -76,9 +78,9 @@ public class Board {
 		for(int i=0;i<possibleMoves.size();i++){
 			getMoveScore(possibleMoves.get(i));
 		}
-		System.out.println("Possible Moves: "+ possibleMoves.toString());
-		calculateConsequences(possibleMoves, 5, 0, 1);
-		System.out.println("Possible Moves: "+ possibleMoves.toString());
+		//System.out.println("Possible Moves: "+ possibleMoves.toString());
+		calculateConsequences(possibleMoves, 6, 0, 1);
+		//System.out.println("Possible Moves: "+ possibleMoves.toString());
 		Collections.sort(possibleMoves, new MoveComparator());
 		
 		//System.out.println("Possible Moves: "+ possibleMoves.toString());
@@ -86,47 +88,51 @@ public class Board {
 		possibleMoves.get(0).printMove();
 	}
 	/**********************************************************
-	 * computePossibleMoves Method
+	 * Calculate Consequences Method
 	 **********************************************************/
-	private void calculateConsequences(ArrayList<Move> moves, int depth, int pruneVal, int player){
-		player = (player%2)+1;
+	private void calculateConsequences(List<Move> moves, int depth, int pruneVal, int player){
+		player = (player%2)+1; //This shenanighans maps 1->2 or 2->1
 		//p("newPlayer: "+player+" search depth: "+depth,pruneVal);
 		pruneVal++;
 		
 		for(Move currMove: moves){
 			execute(currMove);
-			//p("If player<"+((player%2)+1)+"> moves "+currMove+" then player<"+player+"> can move",pruneVal);
-			ArrayList<Move> nextMoves = computePossibleMoves(player);
-			//p(""+ nextMoves.toString(),pruneVal);
+			//p("If player<"+((player%2)+1)+"> moves "+currMove+" then player<"+player+"> can move:",pruneVal);
+			List<Move> nextMoves = computePossibleMoves(player);
 			if(nextMoves.size() != 0){
 				for(int i=0;i<nextMoves.size();i++){
 					getMoveScore(nextMoves.get(i));
 				}
-				//p("nextMoves w/ posS: "+ nextMoves.toString(),pruneVal);
 				Collections.sort(nextMoves, new MoveComparator());
+				//print(nextMoves);
 				if(depth > 0){
-					calculateConsequences(nextMoves, depth-1, pruneVal, player);
+					int small = Math.min(CUT_VAL, nextMoves.size());
+					nextMoves = nextMoves.subList(0, small);
+					calculateConsequences(nextMoves, depth-1, pruneVal, player); 
 				}
-				//p("  "+ nextMoves.toString(),pruneVal);
 				Collections.sort(nextMoves, new MoveComparator());
-				Move minMaxMove;
-				if(player == 1) minMaxMove = nextMoves.get(0);
-				else if(player == 2) minMaxMove = nextMoves.get(nextMoves.size()-1);
-				else throw new IllegalStateException();
+				Move minMaxMove = nextMoves.get(0);;
+				/*if(player == 1) minMaxMove = nextMoves.get(0);
+				else if(player == 2) minMaxMove = nextMoves.get(0);
+				else throw new IllegalStateException();*/
 				//p("  but player<"+player+">'s best move is: "+minMaxMove,pruneVal);
-				currMove.consequenceScore = (minMaxMove.positionScore+minMaxMove.consequenceScore)*-1;
+				int tempCons = ((minMaxMove.positionScore+minMaxMove.consequenceScore)*-1);
+				//p("  and because depth is 0 we stop here and set player<"+((player%2)+1)+">'s consequence score for"+currMove+" to: "+tempCons, pruneVal);
+				currMove.consequenceScore = (tempCons);
 			} else {
+				//p("  player<"+player+"> has no moves so we set  player<"+((player%2)+1)+">'s consequence score to:"+NO_MOVE_SCORE,pruneVal);
 				currMove.consequenceScore = NO_MOVE_SCORE; 
 			}
 			undo(currMove);
 		}
+		
+		//p("  To Recap: player<"+((player%2)+1)+">'s move set is: "+moves,pruneVal);
 	}
 	
 	private void p(String msg, int tabSpace){
-		return;/*
 		for(int i=0; i<=tabSpace;i++)
 			System.out.print("  ");
-		System.out.println(msg);	*/	
+		System.out.println(msg);
 	}
 	
 	/**********************************************************
@@ -324,16 +330,16 @@ public class Board {
 	 * 	print - prints with possible moves
 	 *  showBoard - prints without possible moves
 	 **********************************************************/
-	public void print() {
+	public void print(List<Move> posMoves) {
 		System.out.println("Board: disk_Count: " + getDiskCount());
 		System.out.println("Black Disks: "+blackDisks.toString());
 		System.out.println("White Disks: "+whiteDisks.toString());
-		System.out.println("Possible Moves: "+ possibleMoves.toString());
+		System.out.println("posMoves: "+ posMoves.toString());
 		System.out.println("     | 0 1 2 3 4 5 6 7 8 9 A B C D E F");
 		for (int i = 0; i < board.length; i++) {
 			System.out.print("Row " + i + "| ");
 			for (int j = 0; j < board[i].length; j++) {
-				if (possibleMoves.contains(new Move(1, i, j))) {
+				if (posMoves.contains(new Move(1, i, j))) {
 					System.out.print("X ");
 				} else{
 					String val = board[i][j].getCell().getVal();

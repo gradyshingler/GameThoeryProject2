@@ -99,7 +99,7 @@ public class MoveEvaluator {
 			board.execute(path.get(i));
 		}
 	}
-	private void predict(){
+	private void predict(){/*
 		int level = 0;
 		int state = 0;
 		//Loop to iterate to every level of the tree
@@ -121,7 +121,7 @@ public class MoveEvaluator {
 				next(this.states[state], this.states[state + 1]);
 			}
 			System.out.println();
-		}
+		}*/
 	}
 	private void getScores(){
 			for(int state =calcIndex(this.MovesDeep)-1; state >= 0 ; state --){

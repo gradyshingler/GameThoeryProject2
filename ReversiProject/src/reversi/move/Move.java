@@ -65,8 +65,8 @@ public class Move {
 	}
 	
 	public String toString() {
-		//return "<("+row + "," + col+"): P["+positionScore+"] C["+consequenceScore+"]>";
-		return "<("+row + "," + col+"):"+(positionScore+consequenceScore)+"]>";
+		return "<("+row + "," + col+"): P["+positionScore+"] C["+consequenceScore+"]>";
+		//return "<("+row + "," + col+"):"+(positionScore+consequenceScore)+"]>";
 	}
 	
 	public boolean equals(Object o) {
