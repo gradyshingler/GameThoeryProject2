@@ -31,7 +31,7 @@ public class Board {
 	public ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	public ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
 	List<Move> possibleMoves = new ArrayList<Move>();
-	static Score scoreChart;
+	public static Score scoreChart;
 
 	/**********************************************************
 	 * Constructor

@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class Move {
-	int row;
-	int col;
-	int player;// 1 is player1, 2 is player2
+	public int row;
+	public int col;
+	public int player;// 1 is player1, 2 is player2
 	public TreeMap<Direction, Integer> flips;
 	public int positionScore = 0;
 	public int consequenceScore = 0;
