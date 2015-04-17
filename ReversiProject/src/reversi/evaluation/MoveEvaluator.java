@@ -1,4 +1,5 @@
 package reversi.evaluation;
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -99,7 +100,7 @@ public class MoveEvaluator {
 			board.execute(path.get(i));
 		}
 	}
-	private void predict(){/*
+	private void predict(){
 		int level = 0;
 		int state = 0;
 		//Loop to iterate to every level of the tree
@@ -109,7 +110,7 @@ public class MoveEvaluator {
 			for(state = state; state < calcIndex(i + 1); state ++){
 				//sort possible moves so best 4 are in the front;
 				Collections.sort(board.getPossibleMoves(), new MoveComparator());
-				ArrayList<Move> moves = board.getPossibleMoves();
+				java.util.List<Move> moves = board.getPossibleMoves();
 				for(int c = 0; c < 4; c ++){
 					int childIndex = state * this.choices + 1;
 					//place best 4 in the state.children
@@ -121,7 +122,7 @@ public class MoveEvaluator {
 				next(this.states[state], this.states[state + 1]);
 			}
 			System.out.println();
-		}*/
+		}
 	}
 	private void getScores(){
 			for(int state =calcIndex(this.MovesDeep)-1; state >= 0 ; state --){

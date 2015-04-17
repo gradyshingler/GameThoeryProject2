@@ -37,7 +37,7 @@ public class State {
 			this.score = this.move.positionScore;
 		}
 		//PLAYER 1 trying to maximize
-		if(player1 == true){
+		if(true){
 			int best = 0;
 			for(int i = 0; i < 4; i++){
 				int s;

@@ -196,7 +196,7 @@ public class Board {
 	/**********************************************************
 	 * computePossibleMoves Method
 	 **********************************************************/
-	private ArrayList<Move> computePossibleMoves(int player) {
+	public ArrayList<Move> computePossibleMoves(int player) {
 		ArrayList<Move> tempMoves = new ArrayList<Move>();
 		if(player == 1){
 			for(Disk currDisk: blackDisks){
@@ -349,7 +349,7 @@ public class Board {
 	/**********************************************************
 	 * Compute A Moves Position Score and sets the move score to that value
 	 **********************************************************/
-	private int getMoveScore(Move move){
+	public int getMoveScore(Move move){
 		TreeMap<Direction, Integer> flips = move.getFlips();
 		int row = move.getRow();
 		int col = move.getCol();
