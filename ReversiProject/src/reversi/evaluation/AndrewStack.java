@@ -70,12 +70,12 @@ public static  void calculateConsequencesIt(Board board, List<Move> moves, int d
 			
 			}
 			
-			Move tempMove = backStack.pop();
+			/*Move tempMove = backStack.pop();
 			tempMove.consequenceScore = tempCons;
 			board.undo(tempMove);
 			//printStackList(stackList);
-			//return;
-			currDepth--;
+			return;
+			currDepth--;*/
 		}
 	}
 }
