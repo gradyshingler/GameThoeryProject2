@@ -15,6 +15,7 @@ package reversi.pieces;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import java.util.TreeMap;
 
 import reversi.evaluation.Score;
@@ -75,17 +76,19 @@ public class Board {
 			showBoard();
 		}*/
 		
-		for(int i=0;i<possibleMoves.size();i++){
-			getMoveScore(possibleMoves.get(i));
+		if(possibleMoves.size()!=0){
+			for(int i=0;i<possibleMoves.size();i++){
+				getMoveScore(possibleMoves.get(i));
+			}
+			Collections.sort(possibleMoves, new MoveComparator());
+			int small = Math.min(CUT_VAL, possibleMoves.size());
+			calculateConsequencesIt(possibleMoves.subList(0, small), 6, 0, 1);
+			Collections.sort(possibleMoves, new MoveComparator());
+			
+			possibleMoves.get(0).printMove();
+		} else {
+			System.out.println("Pass!");
 		}
-		//System.out.println("Possible Moves: "+ possibleMoves.toString());
-		calculateConsequences(possibleMoves, 6, 0, 1);
-		//System.out.println("Possible Moves: "+ possibleMoves.toString());
-		Collections.sort(possibleMoves, new MoveComparator());
-		
-		//System.out.println("Possible Moves: "+ possibleMoves.toString());
-		
-		possibleMoves.get(0).printMove();
 	}
 	/**********************************************************
 	 * Calculate Consequences Method
@@ -108,14 +111,15 @@ public class Board {
 				if(depth > 0){
 					int small = Math.min(CUT_VAL, nextMoves.size());
 					nextMoves = nextMoves.subList(0, small);
-					calculateConsequences(nextMoves, depth-1, pruneVal, player); 
+					calculateConsequences(nextMoves, depth-1, pruneVal, player);
+					Collections.sort(nextMoves, new MoveComparator());
 				}
-				Collections.sort(nextMoves, new MoveComparator());
-				Move minMaxMove = nextMoves.get(0);;
+				
 				/*if(player == 1) minMaxMove = nextMoves.get(0);
 				else if(player == 2) minMaxMove = nextMoves.get(0);
 				else throw new IllegalStateException();*/
 				//p("  but player<"+player+">'s best move is: "+minMaxMove,pruneVal);
+				Move minMaxMove = nextMoves.get(0);
 				int tempCons = ((minMaxMove.positionScore+minMaxMove.consequenceScore)*-1);
 				//p("  and because depth is 0 we stop here and set player<"+((player%2)+1)+">'s consequence score for"+currMove+" to: "+tempCons, pruneVal);
 				currMove.consequenceScore = (tempCons);
@@ -127,6 +131,60 @@ public class Board {
 		}
 		
 		//p("  To Recap: player<"+((player%2)+1)+">'s move set is: "+moves,pruneVal);
+	}
+	
+	/**********************************************************
+	 * Calculate Consequences Method Iteration
+	 **********************************************************/
+	private void calculateConsequencesIt(List<Move> moves, int depth, int pruneVal, int player){
+		
+		Stack<Move> currList = new Stack<Move>();
+		
+		Stack<Stack<Move>> stackList = new Stack<Stack<Move>>();
+		for(Move currMove: moves) currList.push(currMove);
+		
+		stackList.add(currList);
+		Stack<Move> backStack = new Stack<Move>();
+		
+		int currDepth = 0;
+		
+		while( stackList.size() > 0 ){
+			while( currDepth < depth ){
+				Move tempMove = stackList.peek().pop();
+				currDepth++;
+				System.out.println("tempMove: "+tempMove);
+				execute(tempMove);
+				backStack.push(tempMove);
+				List<Move> nextMoves = computePossibleMoves((currDepth%2)+1);
+				
+				for(int i=0; i<nextMoves.size(); i++){ getMoveScore(nextMoves.get(i)); }
+				
+				Collections.sort(nextMoves, new MoveComparator());
+				
+				int small = Math.min(CUT_VAL, nextMoves.size());
+				nextMoves = nextMoves.subList(0, small);
+				
+				Stack<Move> nextStack = new Stack<Move>();
+				for(Move currMove: nextMoves) nextStack.push(currMove);
+				stackList.push(nextStack);
+				printStackList(stackList);
+			}
+			currDepth--;
+			System.out.println("BackList: "+ backStack);
+			Move minMaxMove = stackList.pop().get(0);
+			int tempCons = ((minMaxMove.positionScore+minMaxMove.consequenceScore)*-1);
+			Move tempMove = backStack.pop();
+			tempMove.consequenceScore = tempCons;
+			undo(tempMove);
+			printStackList(stackList);
+			//return;
+		}
+	}
+	
+	private void printStackList(Stack<Stack<Move>> toPrint){
+		for(Stack<Move> curr : toPrint){
+			System.out.println("Player: "+curr.peek().getPlayer()+" "+curr);
+		}
 	}
 	
 	private void p(String msg, int tabSpace){
