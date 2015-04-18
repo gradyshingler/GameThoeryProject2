@@ -58,34 +58,16 @@ public class Board {
 		return possibleMoves;
 	}
 
-	public void makeMove() {
-		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
-		
-		/*
-		 * Testing Execute Move and flips as well as undoing flips
-		 */
-		/*for(int i=0;i<possibleMoves.size();i++){
-			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-			int total = getMoveScore(possibleMoves.get(i));
-			System.out.println("getMoveScore: "+ possibleMoves.get(i).toString()+" = "+total);
-			System.out.println("Executing: "+possibleMoves.get(i).toString());
-			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
-			execute(possibleMoves.get(i));
-			showBoard();
-			System.out.println("Undoing: "+possibleMoves.get(i).toString());
-			undo(possibleMoves.get(i));
-			showBoard();
-		}*/
-		
+	public void makeMove() {		
 		if(possibleMoves.size()!=0){
 			for(int i=0;i<possibleMoves.size();i++){
 				getMoveScore(possibleMoves.get(i));
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
 			int small = Math.min(CUT_VAL, possibleMoves.size());
-			MoveEvaluator moveEv = new MoveEvaluator(2, 3 , this);
-			moveEv.BestMove();
-			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
+			//MoveEvaluator moveEv = new MoveEvaluator(2, 3 , this);
+			//moveEv.BestMove();
+			calculateConsequencesNewIt(possibleMoves.subList(0, small), 2, 0, 1);
 			Collections.sort(possibleMoves, new MoveComparator());
 			
 			possibleMoves.get(0).printMove();
@@ -93,6 +75,83 @@ public class Board {
 			System.out.println("Pass!");
 		}
 	}
+	
+	/**********************************************************
+	 * Calculate Consequences New It Method
+	 **********************************************************/
+	private void calculateConsequencesNewIt(List<Move> moves, int depth, int pruneVal, int player){
+		
+		List<List<Move>> tree = new ArrayList<List<Move>>();
+		int[] countList = new int[depth+2];
+		
+		tree.add(moves);
+		countList[0] = 0;
+		
+		int currDepth = 0;
+		int currPlayer = player;
+		List<Move> currList = tree.get(currDepth);
+		
+		while(countList[0] < moves.size() || tree.size() > 0){			
+			
+			while(countList[currDepth] < currList.size()){
+				execute(currList.get(countList[currDepth]));
+				List<Move> nextMoves = computePossibleMoves((player%2)+1);
+				if(nextMoves.size() != 0){
+					for(int i=0;i<nextMoves.size();i++){ getMoveScore(nextMoves.get(i)); }
+					Collections.sort(nextMoves, new MoveComparator());
+					
+					if(currDepth < depth){
+						int small = Math.min(CUT_VAL, nextMoves.size());
+						List<Move> trim = nextMoves.subList(0, small);
+						tree.add(trim);
+						currList = trim;
+						countList[currDepth]++;
+						currDepth++;
+						player++;
+					} else {
+						Move minMaxMove = nextMoves.get(0);
+						System.out.println("Best move is "+minMaxMove);
+						
+						int tempCons = ((minMaxMove.positionScore+minMaxMove.consequenceScore)*-1);
+						currList.get(countList[currDepth]).consequenceScore = (tempCons);
+						undo(currList.get(countList[currDepth]));
+						countList[currDepth]++;
+						currList = tree.get(currDepth);
+					}
+					
+					printDualList(tree,countList);
+					System.out.println("currDepth = "+currDepth);
+					System.out.println("currList = "+currList);
+					
+					
+				} else {
+					currList.get(countList[currDepth]).consequenceScore = NO_MOVE_SCORE;
+					System.out.println("NO move score");
+					countList[currDepth]++;
+					currDepth++;
+					player++;
+				}
+			}
+			System.out.println("Entering clean-up while loop");
+			while(countList[currDepth] == CUT_VAL ){
+				if(currDepth == 0) return;
+				System.out.println("Condense bottom full row <"+currDepth+">");
+				undo(currList.get(countList[currDepth-1]-1));
+				//find best and put in above's consequence
+				Collections.sort(tree.get(currDepth), new MoveComparator());
+				Move minMaxMove = tree.get(currDepth).get(0);
+				int tempCons = ((minMaxMove.positionScore+minMaxMove.consequenceScore)*-1);
+				//System.out.println(tree.get(currDepth-1).get(countList[currDepth-1]-1)); 
+				tree.get(currDepth-1).get(countList[currDepth-1]-1).consequenceScore = tempCons;
+				tree.remove(currDepth);
+				countList[currDepth] = 0;
+				currDepth--;
+				player++;
+				printDualList(tree, countList);
+			}			
+		}
+	}
+	
 	/**********************************************************
 	 * Calculate Consequences Method
 	 **********************************************************/
@@ -190,6 +249,22 @@ public class Board {
 		}
 	}
 	
+	private void printDualList(List<List<Move>> toPrint, int[] array){
+		System.out.println("Tree: ");
+		int counter=0;
+		for(List<Move> curr : toPrint){
+			System.out.println("\tP<"+curr.get(0).getPlayer()+"> pos-"+array[counter]+" Depth:"+ counter++ +"\t"+curr);
+		}
+	}
+	
+	private void printArray(int[] array){
+		System.out.print("[");
+		for(int i=0; i< array.length;i++){
+			System.out.print(" "+array[i]+" ");
+		}
+		System.out.println("]");
+	}
+	
 	private void p(String msg, int tabSpace){
 		for(int i=0; i<=tabSpace;i++)
 			System.out.print("  ");
@@ -276,6 +351,7 @@ public class Board {
 	public void execute(Move move){
 		int row = move.getRow();
 		int col = move.getCol();
+		if(board[row][col].getCell() != Cell.EMPTY) throw new IllegalArgumentException("Executing on a non empty cell!");
 		if(move.getPlayer() == 1){
 			Disk newDisk = board[row][col];//Disk newDisk = new Disk(row, col, Cell.MINE);
 			newDisk.setCell(Cell.MINE);//board[row][col] = newDisk;
