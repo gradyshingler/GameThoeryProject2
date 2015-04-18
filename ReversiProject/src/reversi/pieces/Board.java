@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import reversi.evaluation.MoveEvaluator;
 import reversi.evaluation.Score;
 import reversi.move.Direction;
 import reversi.move.Move;
@@ -30,7 +31,7 @@ public class Board {
 	Disk[][] board = new Disk[10][16];
 	public ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
 	public ArrayList<Disk> whiteDisks = new ArrayList<Disk>(); //defines as opponent disks
-	List<Move> possibleMoves = new ArrayList<Move>();
+	public List<Move> possibleMoves = new ArrayList<Move>();
 	public static Score scoreChart;
 
 	/**********************************************************
@@ -82,7 +83,9 @@ public class Board {
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
 			int small = Math.min(CUT_VAL, possibleMoves.size());
-			calculateConsequencesIt(possibleMoves.subList(0, small), 6, 0, 1);
+			MoveEvaluator moveEv = new MoveEvaluator(2, 3 , this);
+			moveEv.BestMove();
+			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
 			Collections.sort(possibleMoves, new MoveComparator());
 			
 			possibleMoves.get(0).printMove();

@@ -5,18 +5,21 @@ import reversi.move.Move;
 public class State {
 	public State previous;
 	int score;
-	public State[] children = new State[4];
+	public State[] children;
 	private Move move;
 	private boolean player1;
-	
+	public int choices;
 	//Constructor
-	public State(Move move){
+	public State(Move move, int choices){
 		this.move = move;
+		this.choices = choices;
+		
 	}
 	/*Constructor for the actual state of the game where we will give the state its move options as the form of
 	State[] children*/
-	public State(State[] children){
-		this.children = children;
+	public State(int choices){
+		//Do nothing;
+		this.choices = choices;
 	}
 	public State getPrevious(){
 		return previous;
@@ -33,39 +36,25 @@ public class State {
 	public void trueScore(){
 		//LEAF STATE
 		if(children == null){
-			//Not sure??? I need this position Score to be relative to player 1...
-			this.score = this.move.positionScore;
+			System.out.println("null children in trueScore");
+			return;
 		}
-		//PLAYER 1 trying to maximize
-		if(true){
-			int best = 0;
-			for(int i = 0; i < 4; i++){
+			
+			int best = Integer.MIN_VALUE;
+			for(int i = 0; i < this.choices; i++){
 				int s;
-				if(children[i] != null){
-					s = children[i].getScore();
+				State child= children[i];
+				if(child != null){
+					s = (children[i].move.positionScore - children[i].move.consequenceScore)*-1;
 				}else{
-					s = 0;
+					continue;
 				}
 				if(s>best){
 					best = s;
 				}
 			}
-			this.score = best;	
-		}else{//PLAYER 2 trying to minimize
-			int best = Integer.MAX_VALUE;
-			for(int i = 0; i < 4; i++){
-				int s;
-				if(children[i] != null){
-					s = children[i].getScore();
-				}else{
-					s = Integer.MAX_VALUE;
-				}
-				if(s<best){
-					best = s;
-				}
-			}
-			this.score = best;	
-		}
+			this.move.consequenceScore = best;
+			System.out.println(best );
 	}
 	
 }

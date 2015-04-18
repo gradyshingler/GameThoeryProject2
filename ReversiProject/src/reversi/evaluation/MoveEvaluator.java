@@ -6,6 +6,7 @@ import java.util.Collections;
 import reversi.move.Move;
 import reversi.move.MoveComparator;
 import reversi.pieces.Board;
+import reversi.pieces.Disk;
 
 /******************************Discovering Future States*****************************/
 /*Steps
@@ -33,13 +34,13 @@ public class MoveEvaluator {
 	/*VARIALBES*/
 	private State[] states;//Serves as our "tree" but in array form
 	private int numParents;
-	private ArrayList<Move> possibleMoves;
+	private List possibleMoves;
 	private Board board;
 	int MovesDeep;
 	int choices;
 
 	/*CONSTRUCTOR*/
-	public MoveEvaluator(int choices, int MovesDeep, ArrayList<Move> possibleMoves,  Board board)
+	public MoveEvaluator(int choices, int MovesDeep,  Board board)
 	{
 		/*FOR SIZE: This is how you calculate the size of full k-ary tree... (K^n - 1)/(K-1) ... we'll 
 		 * probably use 4 here for K, but I made it so it work for any k-ary tree of varying height so we
@@ -49,8 +50,7 @@ public class MoveEvaluator {
 		this.choices = choices;
 		int size = (int)(    (Math.pow(choices, MovesDeep +1) - 1)   /   (choices - 1)      );
 		this.states =new State[size];
-		this.possibleMoves = possibleMoves;
-		this.board = board;	
+		this.board = board;
 		
 		//Need to iterate though parents later: all the states with children;
 		numParents = (int)(Math.pow(choices, MovesDeep)/(choices -1));
@@ -63,20 +63,13 @@ public class MoveEvaluator {
 		return this.states.length;
 	}
 	//Returns numeric value of the state the move creates
-	public Move BestMove()
+	public void BestMove()
 	{
-		if(this.possibleMoves == null){
-			return null;//Ideally we'd want to create some sort of pass Move
+		if(board.possibleMoves == null){
+			return;//Ideally we'd want to create some sort of pass Move
 		}
 		predict();
 		getScores();
-		for(State child: states[0].children){
-			if(states[0].score == child.score){
-				return child.getMove();
-			}
-		}
-		
-		return null;
 	}
 	private int calcIndex(int Level){
 		return (int)(    (Math.pow(choices, Level ) - 1)   /   (choices - 1)      ) ;
@@ -103,37 +96,51 @@ public class MoveEvaluator {
 	private void predict(){
 		int level = 0;
 		int state = 0;
+		
+		this.states[0] = new State(this.choices);
 		//Loop to iterate to every level of the tree
 		for(int i = 0; i < this.MovesDeep; i++){
 			System.out.println("level "+ i);
 			//Loop for iterating through every node at that level
 			for(state = state; state < calcIndex(i + 1); state ++){
+				if(states[state] == null){
+					continue;
+				}
 				//sort possible moves so best 4 are in the front;
 				Collections.sort(board.getPossibleMoves(), new MoveComparator());
 				java.util.List<Move> moves = board.getPossibleMoves();
-				for(int c = 0; c < 4; c ++){
+				for(int c = 0; c < this.choices; c ++){
 					int childIndex = state * this.choices + 1;
 					//place best 4 in the state.children
-					State child = new State(moves.get(c));
+					State child = new State(moves.get(c), this.choices);
 					child.previous =this.states[state];
+					System.out.println(state + ", " + c);
+					State s = this.states[state];
+					s.children = new State[this.choices];
 					this.states[state].children[c] = child;
+					this.states[state*choices + c] = child;
 				}
-				System.out.print(state +", ");
 				next(this.states[state], this.states[state + 1]);
 			}
-			System.out.println();
 		}
 	}
 	private void getScores(){
-			for(int state =calcIndex(this.MovesDeep)-1; state >= 0 ; state --){
-					this.states[state].trueScore();
+			for(int state =calcIndex(this.MovesDeep+1)-1; state >= 0 ; state --){
+				
+					State s = this.states[state];
+					if(s != null){
+						System.out.print("true score for state:" +state+ ", ");
+						s.trueScore();
+					}else{
+						System.out.println(state +" woah there buddy");
+					}
 			}
 	}
 	
 	public static void main(String[] args){
 		
 		//TEST THAT DATA STRUCTURE SIZE IS CORRECT
-		MoveEvaluator moveEv = new MoveEvaluator(4, 4, null, null);
+		MoveEvaluator moveEv = new MoveEvaluator(4, 4, null);
 		System.out.println("Full Size: "+ moveEv.size());
 		System.out.println("Number of parents: " + moveEv.getNumParents());
 		int level = 3;
