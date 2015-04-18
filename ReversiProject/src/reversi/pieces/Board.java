@@ -82,18 +82,106 @@ public class Board {
 				getMoveScore(possibleMoves.get(i));
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
-			int small = Math.min(CUT_VAL, possibleMoves.size());
-			//MoveEvaluator moveEv = new MoveEvaluator(2, 3 , this);
-			//moveEv.BestMove();
-			//calculateConsequencesNewIt(possibleMoves.subList(0, small), 2, 0, 1);
-			MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
-			moveEv.BestMove();
-			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
-			//Collections.sort(possibleMoves, new MoveComparator());
+			while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
 			
-			//possibleMoves.get(0).printMove();
+			//MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
+			//moveEv.BestMove();
+			
+			//Iterative Function
+			calculateConsequencesFinalIt(possibleMoves, 15, 0, 1);
+			Collections.sort(possibleMoves, new MoveComparator());
+			possibleMoves.get(0).printMove();
+			
+			//Recursive Function
+			/*calculateConsequences(possibleMoves, 9, 0, 1);
+			Collections.sort(possibleMoves, new MoveComparator());
+			System.out.println(possibleMoves);
+			possibleMoves.get(0).printMove();*/
+			
 		} else {
 			System.out.println("Pass!");
+		}
+	}
+	
+	/**********************************************************
+	 * Calculate Consequences Method Iteration
+	 **********************************************************/
+	private void calculateConsequencesFinalIt(List<Move> moves, int depth, int pruneVal, int player){
+		List<List<Move>> tree = new ArrayList<List<Move>>();
+		int[] countList = new int[depth+1];
+		for(int i = 0; i < countList.length; i++){
+			countList[i] = -1;
+		}
+		
+		int currDepth = 0;
+		List<Move> currList = moves;
+		tree.add(currList);
+		//System.out.println("set tree["+currDepth+"] as currMoveList");
+		 
+		while(currList != null){
+			//System.out.println("Entering Outside Loop: depth("+currDepth+") player("+((currDepth%2)+1)+")");
+			if(currDepth < depth){
+				countList[currDepth]++;
+				if(countList[currDepth] == tree.get(currDepth).size()){
+					//System.out.println("Merge_Up");
+					if(currDepth == 0){
+						//System.out.println("I think were done");
+						//printDualList(tree, countList);
+						return;
+					}
+					Collections.sort(tree.get(currDepth),new MoveComparator());
+					Move minMaxMove = tree.get(currDepth).get(0);
+					tree.get(currDepth-1).get(countList[currDepth-1]).consequenceScore = ((minMaxMove.positionScore + minMaxMove.consequenceScore)*-1);
+					//System.out.println("Undo old move and Delete tree[depth]");
+					undo(tree.get(currDepth-1).get(countList[currDepth-1]));
+					tree.remove(currDepth);
+					
+					countList[currDepth] = -1;
+					currDepth--;
+					currList = tree.get(currDepth);
+				} else {
+					Move currMove = currList.get(countList[currDepth]);
+					execute(currMove);
+					currDepth++;
+					
+					List<Move> nextMoves = computePossibleMoves((currDepth%2)+1);
+					if(nextMoves.size() != 0){
+						for(int i=0;i<nextMoves.size();i++){ getMoveScore(nextMoves.get(i)); }
+						Collections.sort(nextMoves, new MoveComparator());
+						while(nextMoves.size()>CUT_VAL) nextMoves.remove(CUT_VAL);
+						currList = nextMoves;
+						tree.add(currList);
+						//System.out.println("set tree["+currDepth+"] as currMoveList");
+					} else { 
+						//System.out.println("Other player has no moves");
+						tree.get(currDepth-1).get(countList[currDepth-1]).consequenceScore = NO_MOVE_SCORE;
+						//System.out.println("Undo old move and Delete tree[depth]");
+						undo(tree.get(currDepth-1).get(countList[currDepth-1]));
+						//tree.remove(currDepth);
+						
+						countList[currDepth] = -1;
+						currDepth--;
+						currList = tree.get(currDepth);
+					}
+				}
+			} else if(currDepth >= depth){
+				//System.out.println("Figure out cons scores");
+				//printDualList(tree, countList);
+				
+				//System.out.println("set first value of tree[depth] as consScore for pos counter of tree[depth-1]");
+				Move minMaxMove = tree.get(currDepth).get(0);
+				tree.get(currDepth-1).get(countList[currDepth-1]).consequenceScore = ((minMaxMove.positionScore + minMaxMove.consequenceScore)*-1);
+				//printDualList(tree, countList);
+				
+				//System.out.println("Undo old move and Delete tree[depth]");
+				undo(tree.get(currDepth-1).get(countList[currDepth-1]));
+				tree.remove(currDepth);
+				
+				countList[currDepth] = -1;
+				currDepth--;
+				currList = tree.get(currDepth);
+				//printDualList(tree, countList);
+			}
 		}
 	}
 	
@@ -274,7 +362,7 @@ public class Board {
 		System.out.println("Tree: ");
 		int counter=0;
 		for(List<Move> curr : toPrint){
-			System.out.println("\tP<"+curr.get(0).getPlayer()+"> pos-"+array[counter]+" Depth:"+ counter++ +"\t"+curr);
+			System.out.println("\tP<"+curr.get(0).getPlayer()+"> pos:"+array[counter]+" Depth:"+ counter++ +"\t"+curr);
 		}
 	}
 	
