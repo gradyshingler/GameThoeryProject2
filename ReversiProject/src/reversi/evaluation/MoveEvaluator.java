@@ -124,7 +124,12 @@ public class MoveEvaluator {
 					last = state;
 				}
 				//sort possible moves so best 4 are in the front;
-				java.util.List<Move> moves= board.computePossibleMoves((i%2)+1);
+				java.util.List<Move> moves;
+				if(state!=0){
+				moves= board.computePossibleMoves((i%2)+1);
+				}else{
+				moves= board.possibleMoves;
+				}
 				Collections.sort(moves, new MoveComparator());
 				
 				
