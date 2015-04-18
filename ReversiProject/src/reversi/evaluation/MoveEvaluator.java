@@ -110,7 +110,8 @@ public class MoveEvaluator {
 		for(int i = 0; i < this.MovesDeep; i++){
 			//////////System.out.println("level "+ i);
 			//Loop for iterating through every node at that level
-			for(state = state; state < calcIndex(i + 1); state ++){
+			int limit = calcIndex(i + 1);
+			for(state = state; state < limit ; state ++){
 				if(states[state] == null){
 					//////////System.out.print("wait why");
 					continue;
@@ -137,7 +138,18 @@ public class MoveEvaluator {
 					
 					this.states[childIndex] = child;
 				}
-				next(this.states[state], this.states[state + 1]);
+				int next = 1;
+				boolean add = true;
+				while(this.states[state + next] ==null){
+					next++;
+					if(this.states[state + next] == null){
+						add = false;
+					}
+				}
+				if(add){
+					next(this.states[state], this.states[state + next]);
+				}
+				state= state + next - 1;
 			}
 		}
 	}
