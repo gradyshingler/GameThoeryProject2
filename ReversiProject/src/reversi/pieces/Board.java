@@ -85,13 +85,13 @@ public class Board {
 			int small = Math.min(CUT_VAL, possibleMoves.size());
 			//MoveEvaluator moveEv = new MoveEvaluator(2, 3 , this);
 			//moveEv.BestMove();
-			calculateConsequencesNewIt(possibleMoves.subList(0, small), 2, 0, 1);
+			//calculateConsequencesNewIt(possibleMoves.subList(0, small), 2, 0, 1);
 			MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
 			moveEv.BestMove();
 			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
-			Collections.sort(possibleMoves, new MoveComparator());
+			//Collections.sort(possibleMoves, new MoveComparator());
 			
-			possibleMoves.get(0).printMove();
+			//possibleMoves.get(0).printMove();
 		} else {
 			System.out.println("Pass!");
 		}
