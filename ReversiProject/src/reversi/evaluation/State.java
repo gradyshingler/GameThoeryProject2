@@ -36,7 +36,7 @@ public class State {
 	public void trueScore(){
 		//LEAF STATE
 		if(children == null){
-			System.out.println("null children in trueScore");
+			////System.out.println("null children in trueScore");
 			return;
 		}
 			
@@ -54,7 +54,8 @@ public class State {
 				}
 			}
 			this.move.consequenceScore = best;
-			System.out.println(best );
+			////System.out.println("consequence: " + best + ", " + "position" + this.move.positionScore);
+			
 	}
 	
 }

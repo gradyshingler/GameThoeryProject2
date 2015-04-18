@@ -58,7 +58,25 @@ public class Board {
 		return possibleMoves;
 	}
 
-	public void makeMove() {		
+	public void makeMove() {
+		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
+		
+		/*
+		 * Testing Execute Move and flips as well as undoing flips
+		 */
+		/*for(int i=0;i<possibleMoves.size();i++){
+			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			int total = getMoveScore(possibleMoves.get(i));
+			System.out.println("getMoveScore: "+ possibleMoves.get(i).toString()+" = "+total);
+			System.out.println("Executing: "+possibleMoves.get(i).toString());
+			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
+			execute(possibleMoves.get(i));
+			showBoard();
+			System.out.println("Undoing: "+possibleMoves.get(i).toString());
+			undo(possibleMoves.get(i));
+			showBoard();
+		}*/
+		
 		if(possibleMoves.size()!=0){
 			for(int i=0;i<possibleMoves.size();i++){
 				getMoveScore(possibleMoves.get(i));
@@ -68,6 +86,9 @@ public class Board {
 			//MoveEvaluator moveEv = new MoveEvaluator(2, 3 , this);
 			//moveEv.BestMove();
 			calculateConsequencesNewIt(possibleMoves.subList(0, small), 2, 0, 1);
+			MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
+			moveEv.BestMove();
+			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
 			Collections.sort(possibleMoves, new MoveComparator());
 			
 			possibleMoves.get(0).printMove();

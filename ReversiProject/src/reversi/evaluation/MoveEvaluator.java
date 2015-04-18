@@ -76,11 +76,16 @@ public class MoveEvaluator {
 	}
 	//reseting the board for the next state. Executes and Undo's moves;
 	private void next(State current, State next){
-		
+		int forward = 0;
+		int undo = 0;
 		ArrayList<Move> path = new ArrayList<Move>();
 		do{
+			if(current.getMove() == null){
+				continue;
+			}
 			path.add(next.getMove());
 			board.undo(current.getMove());
+			undo++;
 			current = current.previous;
 			next = next.previous;
 		}while(current!= next && current.previous!= null); 
@@ -88,10 +93,13 @@ public class MoveEvaluator {
 		if(current.previous == null && next.previous != null){
 			//account for next, being on next level by executing left of root.
 			board.execute(current.children[0].getMove());
+			forward++;
 		}
 		for(int i = path.size() -1; i >= 0; i--){
 			board.execute(path.get(i));
+			forward++;
 		}
+		//////////System.out.println("undo: " + undo + "forward " + forward);
 	}
 	private void predict(){
 		int level = 0;
@@ -100,39 +108,60 @@ public class MoveEvaluator {
 		this.states[0] = new State(this.choices);
 		//Loop to iterate to every level of the tree
 		for(int i = 0; i < this.MovesDeep; i++){
-			System.out.println("level "+ i);
+			//////////System.out.println("level "+ i);
 			//Loop for iterating through every node at that level
-			for(state = state; state < calcIndex(i + 1); state ++){
+			int limit = calcIndex(i + 1);
+			for(state = state; state < limit ; state ++){
 				if(states[state] == null){
+					//////////System.out.print("wait why");
 					continue;
+					
 				}
 				//sort possible moves so best 4 are in the front;
-				Collections.sort(board.getPossibleMoves(), new MoveComparator());
-				java.util.List<Move> moves = board.getPossibleMoves();
-				for(int c = 0; c < this.choices; c ++){
-					int childIndex = state * this.choices + 1;
-					//place best 4 in the state.children
+				java.util.List<Move> moves= board.computePossibleMoves((i%2)+1);
+				Collections.sort(moves, new MoveComparator());
+				
+				
+				State s = this.states[state];
+				s.children = new State[this.choices];
+				for(int c = 0; c < this.choices && c < moves.size(); c ++){
+					int childIndex = state * this.choices + 1 +c;
+					//calc position score and the place best 4 in the state.children
+					this.board.execute(moves.get(c));
+					this.board.getMoveScore(moves.get(c));
+					this.board.undo(moves.get(c));
 					State child = new State(moves.get(c), this.choices);
 					child.previous =this.states[state];
-					System.out.println(state + ", " + c);
-					State s = this.states[state];
-					s.children = new State[this.choices];
+					//System.out.println(state + ", " + childIndex);
+					
 					this.states[state].children[c] = child;
-					this.states[state*choices + c] = child;
+					
+					this.states[childIndex] = child;
 				}
-				next(this.states[state], this.states[state + 1]);
+				int next = 1;
+				boolean add = true;
+				while(this.states[state + next] ==null){
+					next++;
+					if(this.states[state + next] == null){
+						add = false;
+					}
+				}
+				if(add){
+					next(this.states[state], this.states[state + next]);
+				}
+				state= state + next - 1;
 			}
 		}
 	}
 	private void getScores(){
-			for(int state =calcIndex(this.MovesDeep+1)-1; state >= 0 ; state --){
+			for(int state =calcIndex(this.MovesDeep+1)-1; state > 0 ; state --){
 				
 					State s = this.states[state];
 					if(s != null){
-						System.out.print("true score for state:" +state+ ", ");
+						////////////System.out.print("true score for state:" +state+ ", " + "(" + this.states[state].getMove().row +","+ this.states[state].getMove().col +")");
 						s.trueScore();
 					}else{
-						System.out.println(state +" woah there buddy");
+						////////////System.out.println(state +" woah there buddy");
 					}
 			}
 	}
@@ -141,12 +170,12 @@ public class MoveEvaluator {
 		
 		//TEST THAT DATA STRUCTURE SIZE IS CORRECT
 		MoveEvaluator moveEv = new MoveEvaluator(4, 4, null);
-		System.out.println("Full Size: "+ moveEv.size());
-		System.out.println("Number of parents: " + moveEv.getNumParents());
+		//////////System.out.println("Full Size: "+ moveEv.size());
+		//////////System.out.println("Number of parents: " + moveEv.getNumParents());
 		int level = 3;
 		int index = moveEv.calcIndex(level);
-		System.out.println("Given the level: " + level);
-		System.out.println("The starting index is: " + index);
+		//////////System.out.println("Given the level: " + level);
+		//////////System.out.println("The starting index is: " + index);
 		//moveEv.BestMove();
 		moveEv.getScores();
 	}
