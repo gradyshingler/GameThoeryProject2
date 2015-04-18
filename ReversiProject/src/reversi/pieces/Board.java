@@ -83,7 +83,7 @@ public class Board {
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
 			int small = Math.min(CUT_VAL, possibleMoves.size());
-			MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
+			MoveEvaluator moveEv = new MoveEvaluator(3, 12, this);
 			moveEv.BestMove();
 			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
 			Collections.sort(possibleMoves, new MoveComparator());

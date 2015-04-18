@@ -104,8 +104,11 @@ public class MoveEvaluator {
 	private void predict(){
 		int level = 0;
 		int state = 0;
+		int last = 0;
+		int next = 1;
 		
-		this.states[0] = new State(this.choices);
+		this.states[0] = new State();
+	
 		//Loop to iterate to every level of the tree
 		for(int i = 0; i < this.MovesDeep; i++){
 			//////////System.out.println("level "+ i);
@@ -116,6 +119,9 @@ public class MoveEvaluator {
 					//////////System.out.print("wait why");
 					continue;
 					
+				}else if(last != 0){
+					next(this.states[last], this.states[state]);
+					last = state;
 				}
 				//sort possible moves so best 4 are in the front;
 				java.util.List<Move> moves= board.computePossibleMoves((i%2)+1);
@@ -123,33 +129,25 @@ public class MoveEvaluator {
 				
 				
 				State s = this.states[state];
-				s.children = new State[this.choices];
-				for(int c = 0; c < this.choices && c < moves.size(); c ++){
+				if(moves.size() < this.choices){
+					s.children = new State[moves.size()];
+				}else{
+					s.children = new State[this.choices];
+				}
+				for(int c = 0; c < s.children.length; c ++){
 					int childIndex = state * this.choices + 1 +c;
 					//calc position score and the place best 4 in the state.children
 					this.board.execute(moves.get(c));
 					this.board.getMoveScore(moves.get(c));
 					this.board.undo(moves.get(c));
-					State child = new State(moves.get(c), this.choices);
+					State child = new State(moves.get(c));
 					child.previous =this.states[state];
 					//System.out.println(state + ", " + childIndex);
 					
 					this.states[state].children[c] = child;
-					
 					this.states[childIndex] = child;
 				}
-				int next = 1;
-				boolean add = true;
-				while(this.states[state + next] ==null){
-					next++;
-					if(this.states[state + next] == null){
-						add = false;
-					}
-				}
-				if(add){
-					next(this.states[state], this.states[state + next]);
-				}
-				state= state + next - 1;
+				
 			}
 		}
 	}
@@ -158,10 +156,10 @@ public class MoveEvaluator {
 				
 					State s = this.states[state];
 					if(s != null){
-						////////////System.out.print("true score for state:" +state+ ", " + "(" + this.states[state].getMove().row +","+ this.states[state].getMove().col +")");
+						//System.out.print("true score for state:" +state+ ", " + "(" + this.states[state].getMove().row +","+ this.states[state].getMove().col +")");
 						s.trueScore();
 					}else{
-						////////////System.out.println(state +" woah there buddy");
+						//System.out.println(state +" woah there buddy");
 					}
 			}
 	}

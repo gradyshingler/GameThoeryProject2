@@ -10,16 +10,14 @@ public class State {
 	private boolean player1;
 	public int choices;
 	//Constructor
-	public State(Move move, int choices){
+	public State(Move move){
 		this.move = move;
-		this.choices = choices;
 		
 	}
 	/*Constructor for the actual state of the game where we will give the state its move options as the form of
 	State[] children*/
-	public State(int choices){
-		//Do nothing;
-		this.choices = choices;
+	public State(){
+		
 	}
 	public State getPrevious(){
 		return previous;
@@ -42,7 +40,7 @@ public class State {
 			
 			int best = Integer.MIN_VALUE;
 			for(int i = 0; i < this.choices; i++){
-				int s;
+				int s=0;
 				State child= children[i];
 				if(child != null){
 					s = (children[i].move.positionScore - children[i].move.consequenceScore)*-1;
