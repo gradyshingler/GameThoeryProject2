@@ -27,6 +27,7 @@ import reversi.move.MoveComparator;
 public class Board {
 	private final int NO_MOVE_SCORE = 20;
 	private final int CUT_VAL = 4;
+	private final int DEPTH = 9;
 	
 	Disk[][] board = new Disk[10][16];
 	public ArrayList<Disk> blackDisks = new ArrayList<Disk>(); //defined as my disks
@@ -78,35 +79,35 @@ public class Board {
 		}*/
 		
 		if(possibleMoves.size()!=0){
-			System.out.println(possibleMoves);
 			for(int i=0;i<possibleMoves.size();i++){
 				getMoveScore(possibleMoves.get(i));
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
-
-			int small = Math.min(CUT_VAL, possibleMoves.size());
-			MoveEvaluator moveEv = new MoveEvaluator(2, 2, this);
-			moveEv.BestMove();
-			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
-			Collections.sort(possibleMoves, new MoveComparator());
+			while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
 			
-
-			//while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
-//>>>>>>> branch 'master' of https://github.com/gradyshingler/GameThoeryProject2.git
-			
+			double time;
 			//MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
 			//moveEv.BestMove();
 			
 			//Iterative Function
-			//calculateConsequencesFinalIt(possibleMoves, 15, 0, 1);
-			//Collections.sort(possibleMoves, new MoveComparator());
-			possibleMoves.get(0).printMove();
-			
-			//Recursive Function
-			/*calculateConsequences(possibleMoves, 9, 0, 1);
+			long timeThen = System.currentTimeMillis();
+			//calculateConsequencesFinalIt(possibleMoves, DEPTH, 0, 1);
+			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);// < - - - USE THIS ONE
 			Collections.sort(possibleMoves, new MoveComparator());
 			System.out.println(possibleMoves);
-			possibleMoves.get(0).printMove();*/
+			possibleMoves.get(0).printMove();
+			time = (System.currentTimeMillis() - timeThen)/1000.0;
+			System.out.println(time);
+			timeThen = System.currentTimeMillis();
+			
+			/*//Recursive Function
+			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);
+			Collections.sort(possibleMoves, new MoveComparator());
+			Collections.sort(possibleMoves, new MoveComparator());
+			System.out.println(possibleMoves);
+			possibleMoves.get(0).printMove();
+			time = (System.currentTimeMillis() - timeThen)/1000.0;
+			System.out.println(time);*/
 			
 		} else {
 			System.out.println("Pass!");
