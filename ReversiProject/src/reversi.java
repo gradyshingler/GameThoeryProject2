@@ -1,3 +1,5 @@
+// A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse Averbukh (112324599)
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -9,7 +11,7 @@ public class reversi {
 
 	final static boolean LOCAL_TEST = true;
 	final static File testFile1 = new File("src/testFile.readBoard");
-	final static File testFile2 = new File("src/cornerCase.readBoard");
+	//final static File testFile2 = new File("src/cornerCase.readBoard");
 	final static File fileToTest = testFile1;
 
 	public static void main(String[] args) {

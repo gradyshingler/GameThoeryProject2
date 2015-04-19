@@ -83,12 +83,12 @@ public class Board {
 				getMoveScore(possibleMoves.get(i));
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
-			while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
+			//while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
 			
 			//calculateConsequencesFinalIt(possibleMoves, DEPTH, 0, 1);
 			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);// < - - - USE THIS ONE
 			Collections.sort(possibleMoves, new MoveComparator());
-			//System.out.println(possibleMoves);
+			System.out.println(possibleMoves);
 			possibleMoves.get(0).printMove();
 			
 			/*//Recursive Function
