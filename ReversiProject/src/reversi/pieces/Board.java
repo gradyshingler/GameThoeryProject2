@@ -78,16 +78,18 @@ public class Board {
 		}*/
 		
 		if(possibleMoves.size()!=0){
+			System.out.println(possibleMoves);
 			for(int i=0;i<possibleMoves.size();i++){
 				getMoveScore(possibleMoves.get(i));
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
 
 			int small = Math.min(CUT_VAL, possibleMoves.size());
-			MoveEvaluator moveEv = new MoveEvaluator(2, 18, this);
+			MoveEvaluator moveEv = new MoveEvaluator(2, 2, this);
 			moveEv.BestMove();
 			//calculateConsequences(possibleMoves.subList(0, small), 6, 0, 1);
 			Collections.sort(possibleMoves, new MoveComparator());
+			
 
 			//while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
 //>>>>>>> branch 'master' of https://github.com/gradyshingler/GameThoeryProject2.git

@@ -119,7 +119,7 @@ public class MoveEvaluator {
 					//////////System.out.print("wait why");
 					continue;
 					
-				}else if(last != 0){
+				}else if(state > 0){
 					next(this.states[last], this.states[state]);
 					last = state;
 				}
@@ -128,9 +128,11 @@ public class MoveEvaluator {
 				if(state!=0){
 				moves= board.computePossibleMoves((i%2)+1);
 				}else{
-				moves= board.possibleMoves;
+				moves=board.possibleMoves;
 				}
 				Collections.sort(moves, new MoveComparator());
+				//System.out.println(moves);
+				//board.showBoard();
 				
 				
 				State s = this.states[state];
@@ -144,6 +146,7 @@ public class MoveEvaluator {
 					//calc position score and the place best 4 in the state.children
 					this.board.execute(moves.get(c));
 					this.board.getMoveScore(moves.get(c));
+					//System.out.println(state + "," + c + "," + moves.get(c));
 					this.board.undo(moves.get(c));
 					State child = new State(moves.get(c));
 					child.previous =this.states[state];
@@ -166,7 +169,22 @@ public class MoveEvaluator {
 					}else{
 						//System.out.println(state +" woah there buddy");
 					}
+					
 			}
+			int max = Integer.MIN_VALUE;
+			State MAX = null;
+			for(State winner: states[0].children){
+				int num = winner.getMove().positionScore + winner.getMove().consequenceScore;
+				if( num > max){
+					max = num;
+					MAX = winner;
+				}else if(num == max){
+					if(winner.getMove().positionScore >= MAX.getMove().positionScore){
+						MAX = winner;
+					}
+				}
+			}
+			//System.out.println(MAX.getMove());
 	}
 	
 	public static void main(String[] args){

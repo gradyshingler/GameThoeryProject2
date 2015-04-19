@@ -39,7 +39,7 @@ public class State {
 		}
 			
 			int best = Integer.MIN_VALUE;
-			for(int i = 0; i < this.choices; i++){
+			for(int i = 0; i < this.children.length; i++){
 				int s=0;
 				State child= children[i];
 				if(child != null){
@@ -52,6 +52,7 @@ public class State {
 				}
 			}
 			this.move.consequenceScore = best;
+			//System.out.println(this.move);
 			////System.out.println("consequence: " + best + ", " + "position" + this.move.positionScore);
 			
 	}
