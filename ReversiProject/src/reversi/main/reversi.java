@@ -17,7 +17,7 @@ public class reversi {
 	final static File fileToTest = testFile1;
 
 	public static void main(String[] args) {
-		long timeThen = System.currentTimeMillis();
+		//long timeThen = System.currentTimeMillis();
 		int[][] rawBoard = new int[8][];
 		Board myBoard = null;
 
@@ -25,8 +25,8 @@ public class reversi {
 
 		myBoard = new Board(rawBoard);
 		myBoard.makeMove();
-		double time = (System.currentTimeMillis() - timeThen)/1000.0;
-		System.out.println(time);
+		//double time = (System.currentTimeMillis() - timeThen)/1000.0;
+		//System.out.println(time);
 		//if(LOCAL_TEST) myBoard.print();
 		//if(LOCAL_TEST) System.out.println("Converted move index: ");
 	}
