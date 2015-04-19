@@ -184,7 +184,7 @@ public class MoveEvaluator {
 					}
 				}
 			}
-			//System.out.println(MAX.getMove());
+			System.out.println(MAX.getMove());
 	}
 	
 	public static void main(String[] args){

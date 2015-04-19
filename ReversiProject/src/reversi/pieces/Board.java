@@ -86,19 +86,16 @@ public class Board {
 			while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
 			
 			double time;
-			//MoveEvaluator moveEv = new MoveEvaluator(4, 10, this);
-			//moveEv.BestMove();
+			MoveEvaluator moveEv = new MoveEvaluator(4, 9, this);
+			moveEv.BestMove();
 			
 			//Iterative Function
 			long timeThen = System.currentTimeMillis();
 			//calculateConsequencesFinalIt(possibleMoves, DEPTH, 0, 1);
-			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);// < - - - USE THIS ONE
+			//calculateConsequences(possibleMoves, DEPTH-1, 0, 1);// < - - - USE THIS ONE
 			Collections.sort(possibleMoves, new MoveComparator());
-			System.out.println(possibleMoves);
-			possibleMoves.get(0).printMove();
-			time = (System.currentTimeMillis() - timeThen)/1000.0;
-			System.out.println(time);
-			timeThen = System.currentTimeMillis();
+			//System.out.println(possibleMoves);
+			//possibleMoves.get(0).printMove();
 			
 			/*//Recursive Function
 			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);
