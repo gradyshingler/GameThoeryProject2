@@ -62,44 +62,19 @@ public class Board {
 	public void makeMove() {
 		// (TODO) - I believe here is where we will be doing a lot of the strategic planning
 		
-		/*
-		 * Testing Execute Move and flips as well as undoing flips
-		 */
-		/*for(int i=0;i<possibleMoves.size();i++){
-			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-			int total = getMoveScore(possibleMoves.get(i));
-			System.out.println("getMoveScore: "+ possibleMoves.get(i).toString()+" = "+total);
-			System.out.println("Executing: "+possibleMoves.get(i).toString());
-			System.out.println("flips: "+possibleMoves.get(i).getFlips().toString());
-			execute(possibleMoves.get(i));
-			showBoard();
-			System.out.println("Undoing: "+possibleMoves.get(i).toString());
-			undo(possibleMoves.get(i));
-			showBoard();
-		}*/
-		
 		if(possibleMoves.size()!=0){
 			for(int i=0;i<possibleMoves.size();i++){
 				getMoveScore(possibleMoves.get(i));
 			}
 			Collections.sort(possibleMoves, new MoveComparator());
-			//while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
+			while(possibleMoves.size()>CUT_VAL) possibleMoves.remove(CUT_VAL);
+			//System.out.println(possibleMoves);
 			
 			//calculateConsequencesFinalIt(possibleMoves, DEPTH, 0, 1);
 			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);// < - - - USE THIS ONE
 			Collections.sort(possibleMoves, new MoveComparator());
-			System.out.println(possibleMoves);
-			possibleMoves.get(0).printMove();
-			
-			/*//Recursive Function
-			calculateConsequences(possibleMoves, DEPTH-1, 0, 1);
-			Collections.sort(possibleMoves, new MoveComparator());
-			Collections.sort(possibleMoves, new MoveComparator());
-			System.out.println(possibleMoves);
-			possibleMoves.get(0).printMove();
-			time = (System.currentTimeMillis() - timeThen)/1000.0;
-			System.out.println(time);*/
-			
+			//System.out.println(possibleMoves);
+			possibleMoves.get(0).printMove();			
 		} else {
 			System.out.println("Pass!");
 		}
@@ -287,12 +262,8 @@ public class Board {
 					calculateConsequences(nextMoves, depth-1, pruneVal, player);
 					Collections.sort(nextMoves, new MoveComparator());
 				}
-				
-				/*if(player == 1) minMaxMove = nextMoves.get(0);
-				else if(player == 2) minMaxMove = nextMoves.get(0);
-				else throw new IllegalStateException();*/
-				//p("  but player<"+player+">'s best move is: "+minMaxMove,pruneVal);
 				Move minMaxMove = nextMoves.get(0);
+				//p("  but player<"+player+">'s best move is: "+minMaxMove,pruneVal);
 				int tempCons = ((minMaxMove.positionScore+minMaxMove.consequenceScore)*-1);
 				//p("  and because depth is 0 we stop here and set player<"+((player%2)+1)+">'s consequence score for"+currMove+" to: "+tempCons, pruneVal);
 				currMove.consequenceScore = (tempCons);
@@ -472,7 +443,7 @@ public class Board {
 			newDisk.setCell(Cell.OPPONENT);//board[row][col] = newDisk;
 			whiteDisks.add(newDisk);
 		}
-		scoreChart.adjustChart(row, col);
+		//scoreChart.adjustChart(row, col);
 		executeFlips(move);
 	}
 	
@@ -486,7 +457,7 @@ public class Board {
 		}else{
 			whiteDisks.remove(oldDisk);
 		}
-		scoreChart.adjustChart(row, col);
+		//scoreChart.adjustChart(row, col);
 		board[row][col].setCell(Cell.EMPTY);
 		executeFlips(move);
 	}
@@ -543,7 +514,7 @@ public class Board {
 		TreeMap<Direction, Integer> flips = move.getFlips();
 		int row = move.getRow();
 		int col = move.getCol();
-		scoreChart.adjustChart(row, col);
+		//scoreChart.adjustChart(row, col);
 		int total = scoreChart.getRawScore(row,col);
 		//System.out.println("pos: "+row+","+(col)+" has a score of: "+total);
 		
@@ -568,7 +539,7 @@ public class Board {
 				total+=tempScore;
 			}
 		}
-		scoreChart.adjustChart(row, col);
+		//scoreChart.adjustChart(row, col);
 		move.positionScore = total;
 		return total;
 	}

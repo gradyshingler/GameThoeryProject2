@@ -112,7 +112,7 @@ public class Score {
 				for (int j = wallLength; j < rowLength + wallLength; j++) {
 					//spaces where moves are possible
 					if(i == 1 || i == 8){
-						if(j == 4 || j == 11) scores[i][j] = 99;
+						if(j == 4 || j == 11) scores[i][j] = 150;
 						else if(j==5 || j==10) scores[i][j] = -20;
 						else if(j==6 || j==9) scores[i][j] = 15;
 						else if(j==7||j==8)	scores[i][j] = 10;
@@ -129,17 +129,17 @@ public class Score {
 						else if(j==3 || j==12) scores[i][j] = 15;
 						else if(j==4 || j==11) scores[i][j] = 10;
 						else if(j==5 || j==10) scores[i][j] = 12;
-						else if(j==6 || j==9) scores[i][j] = 8;
-						else if(j==7 || j==8) scores[i][j] = 7;
+						else if(j==6 || j==9) scores[i][j] = 7;
+						else if(j==7 || j==8) scores[i][j] = 5;
 					}
 					else if(i==4 || i==5){
-						if(j==1 || j==14) scores[i][j] = 80;
+						if(j==1 || j==14) scores[i][j] = 120;
 						else if(j==2 || j==13) scores[i][j] = -30;
 						else if(j==3 || j==12) scores[i][j] = 10;
 						else if(j==4 || j==11) scores[i][j] = 9;
-						else if(j==5 || j==10) scores[i][j] = 8;
-						else if(j==6 || j==9) scores[i][j] = 7;
-						else if(j==7 || j==8) scores[i][j] = 5;
+						else if(j==5 || j==10) scores[i][j] = 7;
+						else if(j==6 || j==9) scores[i][j] = 5;
+						else if(j==7 || j==8) scores[i][j] = 2;
 					}
 				}
 				for (int j = (wallLength) + rowLength; j < 16; j++) {

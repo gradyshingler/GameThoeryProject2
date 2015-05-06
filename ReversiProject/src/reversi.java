@@ -1,4 +1,4 @@
-// A_Team: Grady Shingler (112700508), Andrew Browning (112458331), Jesse Averbukh (112324599)
+//GoshDangItTakeTheCornerPiece2000: Grady Shingler (112700508), Andrew Browning (112458331), Jesse Averbukh (112324599)
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,10 +9,10 @@ import reversi.pieces.Board;
 
 public class reversi {
 
-	final static boolean LOCAL_TEST = true;
-	final static File testFile1 = new File("src/testFile.readBoard");
+	final static boolean LOCAL_TEST = false;
+	//final static File testFile1 = new File("src/testFile.readBoard");
 	//final static File testFile2 = new File("src/cornerCase.readBoard");
-	final static File fileToTest = testFile1;
+	//final static File fileToTest = testFile1;
 
 	public static void main(String[] args) {
 		//long timeThen = System.currentTimeMillis();
@@ -48,7 +48,7 @@ public class reversi {
 	 */
 	private static int[][] parseBoard() {
 		Scanner sc;
-		if (LOCAL_TEST) {
+		/*if (LOCAL_TEST) {
 			try {
 				File file = fileToTest;
 				sc = new Scanner(file);
@@ -58,9 +58,9 @@ public class reversi {
 				sc = null;
 				e.printStackTrace();
 			}
-		} else {
+		} else {*/
 			sc = new Scanner(System.in);
-		}
+		//}
 		int[][] boardNums = new int[8][];
 
 		boardNums[0] = new int[8];
